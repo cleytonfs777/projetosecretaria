@@ -6,3 +6,6 @@ def minutos_para_hm(minutos):
     # Calcula as horas e os minutos restantes
     horas = minutos // 60
     minutos_rest = minutos % 60
+
+def all_ids():
+    pass
