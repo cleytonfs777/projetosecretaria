@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 LOGIN_URL = '/login/'
 
@@ -59,6 +59,7 @@ ROOT_URLCONF = 'core.urls'
 
 CSRF_TRUSTED_ORIGINS = ['https://django-server-production-53fa.up.railway.app']
 
+CSRF_COOKIE_SECURE = True
 
 TEMPLATES = [
     {
