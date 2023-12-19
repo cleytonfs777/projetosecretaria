@@ -57,6 +57,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
+CSRF_TRUSTED_ORIGINS = ['https://django-server-production-53fa.up.railway.app']
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
