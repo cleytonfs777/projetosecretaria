@@ -22,7 +22,7 @@ DEBUG = True
 LOGIN_URL = '/login/'
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['django-server-production-53fa.up.railway.app','localhost', '127.0.0.1']
 
 
 # Application definition
