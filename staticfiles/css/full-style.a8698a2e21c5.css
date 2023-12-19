@@ -1,0 +1,32 @@
+/*A propriedade :root permite criar variáveis no css*/
+:root {
+    --primary-color: #011468;
+    --secondary-color: rgb(110, 172, 223);
+    --dark-color: rgb(0, 12, 22);
+    --cbm-color: #F47920;
+  }
+
+.title-projeto {
+    font-size: .8em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 0.5em;
+}
+
+.body-projeto {
+    font-size: .8em;
+    color: var(--primary-color);
+    margin-bottom: 0.5em;
+    text-align: justify;
+}
+
+.body-projeto span {
+    font-weight: bold;
+}
+h5.card-title.border-bottom:hover{
+    cursor: pointer!important;
+  }
+
+input[type="datetime-local"]::-webkit-datetime-edit-text { 
+color: transparent; 
+}

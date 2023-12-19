@@ -1,0 +1,46 @@
+/*A propriedade :root permite criar variáveis no css*/
+:root {
+  --primary-color: #434c5e;
+  --secondary-color: rgb(110, 172, 223);
+  --dark-color: rgb(0, 12, 22);
+  --cbm-color: #F47920;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+body {
+    background-color:var(--primary-color);
+  }
+  .login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  }
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 30px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  }
+  .close-alert {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 18px;
+  }
+
+  #togglePassword {
+    z-index: 10;
+    /* Outros estilos conforme necessário */
+  }
