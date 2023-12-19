@@ -1,0 +1,534 @@
+{% extends 'base.html' %} {% load static %} {% load filters %} {% block 'title'%}Lista de Registros{% endblock %} {% block 'head' %}
+<link rel="stylesheet" href="{% static 'css/full-style.css' %}" />
+<!-- Estilo do Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+  label.form-label {
+    color: #012970 !important;
+  }
+  th.ocultar,
+  td.ocultar {
+    display: none;
+  }
+  .table-dot tbody {
+    display: block; /* Permite que o tbody seja rolável */
+    max-height: 10em; /* Define a altura máxima */
+    overflow-y: auto; /* Permite a rolagem vertical quando necessário */
+  }
+
+  .table-dot thead,
+  .table-dot tbody tr {
+    display: table; /* Faz com que o thead e tr se comportem como uma tabela */
+    width: 100%; /* Faz com que o thead e tr ocupem a largura total da tabela */
+    table-layout: fixed; /* Garante que as células da tabela sejam de largura igual */
+  }
+
+  /* Estilo personalizado para os elementos <td> */
+  .table-dot td {
+    color: #012970; /* Cor de texto azul escuro */
+    font-size: 0.8em; /* Tamanho de fonte menor */
+    padding: 5px; /* Espaçamento interno, ajuste conforme necessário */
+  }
+
+  .modal-custom {
+    max-width: 50%; /* Ou o valor que você quiser */
+  }
+
+  /* Faz com que a primeira célula do cabeçalho seja mais larga */
+  .dobro-primeira-coluna th:first-child {
+      width: 40%!important;
+  }
+
+  /* Define a largura das outras células do cabeçalho */
+  .dobro-primeira-coluna th:not(:first-child) {
+      width: 20%!important;
+  }
+
+    /* Faz com que a primeira coluna seja mais larga */
+  .dobro-primeira-coluna th:first-child, 
+  .dobro-primeira-coluna td:first-child {
+      width: 40%;  /* Ajuste esse valor conforme desejar */
+  }
+
+  /*Define a largura das outras colunas */
+  .dobro-primeira-coluna th:not(:first-child), 
+  .dobro-primeira-coluna td:not(:first-child) {
+      width: 20%;  /* Ajuste esse valor conforme desejar */
+  }
+  .ocultar {
+    display: none!important; 
+  }
+
+
+</style>
+
+{% endblock %}{% block 'content' %}
+<div class="card">
+  <div class="card-body">
+  <div class="container">
+    <div class="header mt-3" onclick="toggleContent()">
+      <h5 class="card-title">
+        LISTA DE INDISPONIBILIDADE
+        <span>| Selecione o mês e ano desejado</span>
+      </h5>
+      <i class="arrow"></i> <!-- A seta será criada com CSS -->
+  </div>
+      <div class="content" id="content">
+      <div class="row mt-2">
+        <div class="col-md-3 d-flex flex-row justify-content-center align-items-center">
+          <div class="card">
+            <div class="d-flex flex-column justify-content-center align-items-center p-3">
+              <select
+                class="form-select"
+                aria-label="Default select"
+                id="ano"
+                name="ano">
+                <option selected disabled>Selecione o ano</option>
+                {% for ano in anos %}
+                <option value="{{ano}}">{{ano}}</option>
+                {% endfor %}
+              </select>
+              <button class="btn btn-secondary mt-4" onclick="filtrar()" type="button">Filtrar</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 mt-0">
+          <div class="card">
+            <div class="card-body mt-2">
+              <div class="row" id="all_months">
+                <div class="col-12 w-100">
+                  <button class="btn btn-secondary btn-sm w-25 fw-bold mb-2" onclick="marcarTodos()">
+                    Marcar Todos
+                  </button>
+                  <button class="btn btn-warning btn-sm w-25 fw-bold mb-2" onclick="desmarcaTodos()">
+                    Desmarca Todos
+                  </button>
+                </div>
+                {% for mes in meses %}
+                <div class="col-md-3" id="checkmeses_month_{{mes}}">
+                  <input type="checkbox" name="month_{{mes}}" id="month_{{mes}}">
+                  <label for="month_{{mes}}" class="form-label me-2">{{mes|mestexto}}</label>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="row align-items-top">
+        <div class="col-xxl-12 col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <!-- Tabela de Militares -->
+              <table id="main-table_indisp" class="table table-striped table-sm table-dot">
+                <thead>
+                    <tr>
+                        <th scope="col" class="rot-info rot-sm">Nome</th>
+                        <th scope="col" class="rot-info rot-sm">Post/Grad</th>
+                        <th scope="col" class="rot-info rot-sm">Data/Hora Init</th>
+                        <th scope="col" class="rot-info rot-sm">Data/Hora Fim</th>
+                        <th scope="col" class="rot-info rot-sm">Tipo de escala</th>
+                        <th scope="col" class="rot-info rot-sm">Info</th>
+                        <th scope="col" class="rot-info rot-sm"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for indisp in indisponibilidades %}
+                    <tr>
+                        <td class="rot-info rot-sm">{{indisp.militar.nome}}</td>
+                        <td class="rot-info rot-sm">{{indisp.militar.postgrad|formatpostgrad}}</td>
+                        <td class="rot-info rot-sm">{{indisp.datainicial|formatdatetime}}</td>
+                        <td class="rot-info rot-sm">{{indisp.datafinal|formatdatetime}}</td>
+                        <td class="rot-info rot-sm">{{indisp.tipo}}</td>
+                        <td class="rot-info rot-sm" data-bs-info="{{indisp.descricao}}">
+                          <i class="bi bi-info-circle" data-info></i>
+                      </td>
+                        <td>
+                          <!-- Botão para apagar um registro-->
+                          <button 
+                          type="button"
+                          class="btn btn-danger btn-sm" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#modalDeleteIndisp" 
+                          data-bs-iddisp="{{indisp.id}}"
+                          >
+                          <i class="ri-delete-bin-6-line"></i></button>                   
+                          <!-- Botão para editar um registro-->
+                          <button 
+                          type="button" 
+                          class="btn btn-primary btn-sm"
+                          data-bs-toggle="modal" 
+                          data-bs-target="#modalEditIndisp"
+                          data-bs-idindisp="{{indisp.id}}"
+                          data-bs-nomemindisp="{{indisp.militar.nome}}"
+                          data-bs-pgmindisp="{{indisp.militar.postgrad}}"
+                          data-bs-dataiindisp="{{ indisp.datainicial|formatdatetime }}"
+                          data-bs-datafinsidp="{{ indisp.datafinal|formatdatetime }}"
+                          data-bs-tipoindisp="{{indisp.tipo}}"
+                          data-bs-descindisp="{{indisp.descricao}}"
+                          > 
+                          <i class="ri-edit-box-line"></i>
+                        </button>    
+                        </td>             
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+              <!-- End Table with stripped rows -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <!-- Modal Delete Indisp Inicio -->
+  <div class="modal fade" id="modalDeleteIndisp" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="modaltitleIndisp" class="modal-title fw-bold text-danger">Excluir Indisponibilidade </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body m-0 p-0">
+          <form id="formDelIndisp" data-action="{% url 'delete_indisp' 0 %}" method="POST">
+            {% csrf_token %}
+            <h5 class="card-title m-0 text-center"> Realmente deseja apagar permanentemente o Indisponibilidade?</h5>
+            <hr>
+            <div class="d-flex justify-content-center align-items-center m-2">
+              <button type="submit" class="btn btn-danger mx-3">Excluir</button>
+              <button
+              type="button"
+              class="btn btn-secondary mx-3"
+              data-bs-dismiss="modal"
+              >
+              Cancelar
+            </button>
+            </div>
+        </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- Modal Delete Empenho Fim -->
+  <!-- Modal Edit Indisp -->
+<div class="modal fade" id="modalEditIndisp" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable modal-custom">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="modaltitleindisp" class="modal-title fw-bold">Editar Indisponibilidade</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="formEditIndisp" data-action="{% url 'edit_indisp' 0 %}" method="POST">
+          {% csrf_token %}
+          <div class="container">
+            <div class="row py-2">
+              <div class="col-md-6">
+                <label for="militarindispedit" class="form-label text-danger"
+                  >Militar</label
+                >
+                <select
+                  class="form-select"
+                  aria-label="Default"
+                  id="militarindispedit"
+                  name="militarindispedit"
+                  style="font-size:0.9em"
+                  disabled
+                  required
+                >
+                  <option selected disabled>Escolha o militar</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="typeindispedit" class="form-label text-danger"
+                  >Tipo</label
+                >
+                <select
+                  class="form-select"
+                  aria-label="Default"
+                  id="typeindispedit"
+                  name="typeindispedit"
+                  required
+                >
+                  <option selected disabled>Escolha a indisponibilidade</option>
+                  <option value="ferias">Férias</option>
+                  <option value="licenca">Licença</option>
+                  <option value="dispensa">Dispensa</option>
+                  <option value="outros">Outros</option>
+                </select>
+              </div>
+            </div>
+            <div class="row py-2">
+              <div class="col-md-6">
+                <label for="datainitindispedit" class="form-label text-danger"
+                  >Data Inicial</label
+                >
+                <input type="datetime-local" class="form-control datepicker" id="datainitindispedit" name="datainitindispedit">
+              </div>
+              <div class="col-md-6">
+                <label for="datafinalindispedit" class="form-label text-danger"
+                  >Data Final</label
+                >
+                <input type="datetime-local" class="form-control datepicker" id="datafinalindispedit" name="datafinalindispedit">
+              </div>
+            </div>
+            <div class="row py-2">
+              <div class="col-md-12">
+                <label for="descindispedit" class="form-label text-danger"
+                  >Descrição</label
+                >
+                <textarea
+                  class="form-control changeble-item"
+                  style="height: 130px; font-size: 0.8em"
+                  id="descindispedit"
+                  name="descindispedit"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success w-50 fw-bold">Salvar alterações</button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <!-- Cria botão limpar-->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+
+// Seleciona todos os elementos com a classe 'datepicker'
+const datepickers = document.querySelectorAll(".datepicker");
+
+// Aplica o Flatpickr a cada elemento selecionado
+datepickers.forEach(function(input) {
+    flatpickr(input, {
+        locale: 'pt',
+        enableTime: false,
+        dateFormat: "d/m/Y",
+    });
+});
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const icons = document.querySelectorAll('[data-info]');
+
+    icons.forEach(icon => {
+        icon.addEventListener('mouseover', function(event) {
+            const info = icon.parentElement.getAttribute('data-bs-info');
+            const tooltip = document.createElement('div');
+
+            tooltip.className = 'custom-tooltip';
+            tooltip.textContent = info;
+
+            tooltip.style.position = 'absolute';
+            tooltip.style.backgroundColor = '#333';
+            tooltip.style.color = '#fff';
+            tooltip.style.padding = '5px 10px';
+            tooltip.style.borderRadius = '4px';
+            tooltip.style.maxWidth = '250px';
+            tooltip.style.zIndex = '1000';
+
+            // Posiciona o tooltip abaixo e à esquerda do cursor
+            tooltip.style.top = (event.clientY + 5) + 'px';  // +5 para um pequeno espaçamento abaixo do cursor
+            tooltip.style.left = event.clientX + 'px';
+
+            document.body.appendChild(tooltip);
+
+            icon.addEventListener('mouseout', function() {
+                document.body.removeChild(tooltip);
+            });
+        });
+    });
+
+    marcarTodos();
+    ano_full = new Date().getFullYear();
+    document.querySelector('#ano').value = ano_full;
+    filtrar()
+
+});
+function marcarTodos() {
+  // Seleciona todos os checkboxes dentro da div com id="all_months"
+  const checkboxes = document.querySelectorAll('#all_months input[type="checkbox"]');
+
+  // Marca cada checkbox
+  checkboxes.forEach(checkbox => {
+      checkbox.checked = true;
+  });
+}
+
+function desmarcaTodos(){
+  // Seleciona todos os checkboxes dentro da div com id="all_months"
+  const checkboxes = document.querySelectorAll('#all_months input[type="checkbox"]');
+
+  // Marca cada checkbox
+  checkboxes.forEach(checkbox => {
+      checkbox.checked = false;
+  });
+}
+
+function filtrar() {
+  // 1. Capturar o valor do ano
+  const ano = document.getElementById('ano').value;
+
+  // 2. Capturar os meses dos checkboxes marcados
+  const mesesSelecionados = [];
+  const checkboxes = document.querySelectorAll('#all_months input[type="checkbox"]');
+  
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      // Extrair o número do mês do ID
+      const mes = checkbox.id.split('_')[1];
+      mesesSelecionados.push(mes);
+      console.log(`mesesSelecionados: ${mesesSelecionados}`)
+    }
+  });
+  function replaceLeadingZero(str) {
+    return str.replace(/^0([0-9])$/, '$1');
+ }
+
+  // 3. Analisar a tabela
+  const rows = document.querySelectorAll('#main-table_indisp tbody tr');
+  
+  rows.forEach(row => {
+    const dataInit = row.cells[2].innerText.split('/');
+    const dataFim = row.cells[3].innerText.split('/');
+
+    const mesInit = replaceLeadingZero(dataInit[1])
+    const anoInit = dataInit[2].substring(0, 4).trim();
+
+    const mesFim = replaceLeadingZero(dataFim[1]);
+    const anoFim = dataFim[2].substring(0, 4).trim();
+
+    console.log(`mesInit: ${mesInit}, anoInit: ${anoInit}, mesFim: ${mesFim}, anoFim: ${anoFim}, ano: ${ano}`);
+    console.log(`anoInit == ano => ${anoInit == ano} mesesSelecionados.includes(mesInit)) => ${mesesSelecionados.includes(mesInit)} anoFim == ano => ${anoFim == ano} mesesSelecionados.includes(mesFim)) => ${mesesSelecionados.includes(mesFim)}`);
+
+    // Verificar se as datas estão dentro dos meses e anos selecionados
+    if (
+      (anoInit == ano && mesesSelecionados.includes(mesInit)) ||
+      (anoFim == ano && mesesSelecionados.includes(mesFim))
+    ) {
+      row.style.display = '';  // Mostrar a linha
+    } else {
+      row.style.display = 'none';  // Esconder a linha
+    }
+  });
+}
+
+const modalDeleteIndisp = document.getElementById('modalDeleteIndisp')
+if(modalDeleteIndisp){
+  modalDeleteIndisp.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extraindo de data-bs-* o conteudo
+    const iddisp = button.getAttribute('data-bs-iddisp')
+    const formDelIndisp = document.querySelector('#formDelIndisp')
+    let url = formDelIndisp.getAttribute("data-action");
+    url = url.replace('0',iddisp)
+    formDelIndisp.setAttribute("action", url);
+})
+}
+function normalizepostgrad(value) {
+  switch (value) {
+      case 'sd2cl':
+          return 'Sd 2ª Classe BM';
+      case 'sd':
+          return 'Sd BM';
+      case 'cb':
+          return 'Cb BM';
+      case '3sgt':
+          return '3º Sgt BM';
+      case '2sgt':
+          return '2º Sgt BM';
+      case '1sgt':
+          return '1º Sgt BM';
+      case 'subten':
+          return 'Sub Ten BM';
+      case '2ten':
+          return '2º Ten BM';
+      case '1ten':
+          return '1º Ten BM';
+      case 'cap':
+          return 'Cap BM';
+      case 'maj':
+          return 'Maj BM';
+      case 'tencel':
+          return 'Ten Cel BM';
+      case 'cel':
+          return 'Cel BM';
+      default:
+          return value;
+  }
+}
+// Injetando dados no model Edit indisp
+const modalEditIndisp = document.getElementById('modalEditIndisp')
+    if(modalEditIndisp){
+
+      modalEditIndisp.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        const button = event.relatedTarget
+        // Extraindo de data-bs-* o conteudo
+        
+        const idindisp = button.getAttribute('data-bs-idindisp')
+        const nomemindisp = button.getAttribute('data-bs-nomemindisp')
+        const pgmindisp = button.getAttribute('data-bs-pgmindisp')
+        const dataiindisp = button.getAttribute('data-bs-dataiindisp')
+        const datafinsidp = button.getAttribute('data-bs-datafinsidp')
+        const tipoindisp = button.getAttribute('data-bs-tipoindisp')
+        const descindisp = button.getAttribute('data-bs-descindisp')
+        const normpostgrad = normalizepostgrad(pgmindisp)
+
+      // Atualizando campos do meu model militar
+      const militarindispedit = document.getElementById('militarindispedit')
+      const typeindispedit = document.getElementById('typeindispedit')
+      const datainitindispedit = document.getElementById('datainitindispedit')
+      const datafinalindispedit = document.getElementById('datafinalindispedit')
+      const descindispedit = document.getElementById('descindispedit')
+
+      // Criar um <option> e inserir o value como nomemindisp e o texto como pgmindisp + " " + nomemindisp e injetar no select em militarindispedit. E deixar esse option como selected. Deixar ele disabled tambem.
+      const option = document.createElement('option')
+      option.value = nomemindisp
+      option.text = normpostgrad + " " + nomemindisp
+      militarindispedit.appendChild(option)
+      option.setAttribute('selected', true)
+      option.setAttribute('disabled', true)
+
+
+      // Rotulos dinamicos de acordo com a resposta
+      typeindispedit.value = tipoindisp
+      datainitindispedit.value = dataiindisp
+      datafinalindispedit.value = datafinsidp
+      descindispedit.value = descindisp
+      
+      // Ajusta a url do form do modal
+      const formEditIndisp = document.querySelector('#formEditIndisp');
+      let url = formEditIndisp.getAttribute("data-action");
+      url = url.replace('0',idindisp);
+      formEditIndisp.setAttribute("action", url);
+
+        })
+    }
+
+</script>
+{% endblock %}

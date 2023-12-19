@@ -1,0 +1,78 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+  <!-- CSS DO BOOTSPTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/login-style.css' %}">
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {{message.tags}} stilo-message">
+                {{message}}
+                <span class="close-alert" style="cursor: pointer;">&times;</span>
+            </div>
+        {% endfor %}
+      {% endif %}
+    <div class="login-container">
+      <div class="logo">
+        <img src="{% static '/img/logo.png' %}" alt="Logo" width="250">
+      </div>
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="username" class="form-label">Usuário</label>
+          <input type="text" class="form-control" id="username" name="username" placeholder="Digite seu usuário">
+        </div>
+        <label for="password" class="form-label">Senha</label>
+        <div class="input-group mb-3">
+          <input id="password" type="password" class="form-control" name="password" required>
+          <button class="btn btn-outline-secondary password-toggle" type="button"><i class="bi bi-eye"></i></button>
+        </div>     
+        <button type="submit" class="btn btn-secondary fw-bold w-100 mt-4">Entrar</button>
+      </form>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+
+        const passwordInput = document.getElementById('password');
+        const passwordToggle = document.querySelector('.password-toggle');
+
+        passwordToggle.addEventListener('click', function () {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordToggle.innerHTML = '<i class="bi bi-eye-slash"></i>';
+            } else {
+                passwordInput.type = 'password';
+                passwordToggle.innerHTML = '<i class="bi bi-eye"></i>';
+            }
+        });
+
+        const closeButtons = document.querySelectorAll('.close-alert');
+        closeButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const alert = this.parentElement;
+                alert.style.display = 'none';
+            });
+        });
+    });
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- Popper.js first, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>  
+  </div>
+    </body>
+</html>

@@ -1,0 +1,224 @@
+{% extends 'base.html' %} {% load static %} {% load filters %} {% block 'title'%}Cadastro de Indisponibilidade{% endblock %} {% block 'head' %}
+<link rel="stylesheet" href="{% static 'css/full-style.css' %}" />
+<!-- Estilo do Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+  .main-title-form {
+    font-size: 1.5em;
+    font-weight: bold;
+    background-color: #540000;
+    margin-bottom: 0.5em;
+    color: #ff8e8e;
+    width:100%;
+    text-align:center;
+    padding: 0.5em;
+  }
+  input[type="datetime-local"]::-webkit-datetime-edit-text { 
+    color: transparent; 
+  }
+  div.nodisplay {
+    display: none;
+  }
+
+</style>
+{% endblock %}{% block 'content' %}
+<div class="row align-items-top">
+  <!-- Fase Card -->
+  <div class="col-xxl-12 col-md-12">
+    <div class="card info-card revenue-card">
+      <div class="card-body">
+        <form id="form-regindisp" action="{% url 'registrar_indisp' %}" method="POST">
+          {% csrf_token %}
+          <!-- Etapa 1 -->
+          <div class="form-etapa">
+            <div class="d-flex flex-row justify-content-center align-items-center">
+              <h3 class="main-title-form">CADASTRAR INDISPONIBILIDADE</h3>
+            </div>
+            <div class="container">
+              <div class="row py-2">
+                <div class="col-md-6">
+                  <label for="militarindisp" class="form-label text-danger"
+                    >Militar</label
+                  >
+                  <select
+                    class="form-select"
+                    aria-label="Default"
+                    id="militarindisp"
+                    name="militarindisp"
+                    required
+                  >
+                    <option selected disabled>Escolha o militar</option>
+                    {% for militar in militares %}
+                    <option value="{{militar.id}}">{{militar.postgrad|formatpostgrad}} {{militar.nome}}</option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="typeindisp" class="form-label text-danger"
+                    >Tipo</label
+                  >
+                  <select
+                    class="form-select"
+                    aria-label="Default"
+                    id="typeindisp"
+                    name="typeindisp"
+                    required
+                  >
+                    <option selected disabled>Escolha a indisponibilidade</option>
+                    <option value="ferias">Férias</option>
+                    <option value="licenca">Licença</option>
+                    <option value="dispensa">Dispensa</option>
+                    <option value="outros">Outros</option>
+                  </select>
+                </div>
+              </div>
+              <div class="py-2 d-flex flex-row justify-content-start align-items-center">
+                <input type="checkbox" class="m-2" name="has_datahora_ind" id="has_datahora_ind">
+                <label for="has_datahora_ind" class="m-2 fw-bold text-danger">Especificar Apenas Data</label>
+              </div>
+              <div class="row py-2" id="y_datahora">
+                <div class="col-md-6">
+                  <label for="datainitindisp" class="form-label text-danger"
+                    >Data/Hora Inicial</label
+                  >
+                  <input type="datetime-local" class="form-control datepicker" id="datahorainitindisp" name="datahorainitindisp" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="datahorafinalindisp" class="form-label text-danger"
+                    >Data/Hora Final</label
+                  >
+                  <input type="datetime-local" class="form-control datepicker" id="datahorafinalindisp" name="datahorafinalindisp" required>
+                </div>
+              </div>
+              <div class="row py-2 nodisplay" id="n_datahora" >
+                <div class="col-md-6">
+                  <label for="datainitindisp" class="form-label text-danger"
+                    >Data Inicial</label
+                  >
+                  <input type="datetime-local" class="form-control date-only-picker" id="datainitindisp" name="datainitindisp" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="datafinalindisp" class="form-label text-danger"
+                    >Data Final</label
+                  >
+                  <input type="datetime-local" class="form-control date-only-picker" id="datafinalindisp" name="datafinalindisp" required>
+                </div>
+              </div>
+              <div class="row py-2">
+                <div class="col-md-12">
+                  <label for="descindisp" class="form-label text-danger"
+                    >Descrição</label
+                  >
+                  <textarea
+                    class="form-control changeble-item"
+                    style="height: 130px; font-size: 0.8em"
+                    id="descindisp"
+                    name="descindisp"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="row py-2 d-flex justify-content-center my-4">
+                <button class="btn btn-danger w-50 fw-bold" type="submit">CADASTRAR</button>
+              </div>
+            </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Script do Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+
+// Seleciona todos os elementos com a classe 'datepicker'
+const datepickers = document.querySelectorAll(".datepicker");
+
+// Aplica o Flatpickr a cada elemento selecionado
+datepickers.forEach(function(input) {
+  flatpickr(input, {
+      enableTime: true,
+      dateFormat: "d/m/Y H:i",
+      time_24hr: true
+  });
+});
+
+// Para campos somente de Data
+const dateOnlyPickers = document.querySelectorAll(".date-only-picker");
+dateOnlyPickers.forEach(function(input) {
+  flatpickr(input, {
+      dateFormat: "d/m/Y"
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Reseta o formulario de id = 'form-regindisp'
+  document.getElementById('form-regindisp').reset();
+
+{% if limpar_localstorage %}
+
+localStorage.removeItem("form-regindisp-data");
+
+
+{% endif %}
+
+
+  // Pega os dados do localStorage e preenche os campos do formulario
+  let formData = localStorage.getItem("form-regindisp-data");
+  if (formData) {
+      formData = JSON.parse(formData);
+
+      document.getElementById("militarindisp").value = formData.militarindisp;
+      document.getElementById("typeindisp").value = formData.typeindisp;
+      document.getElementById("descindisp").value = formData.descindisp;
+  }
+
+});
+
+document.getElementById("has_datahora_ind").addEventListener("change",(e)=>{
+  // Se o e.target.checked for true deve inserir a classe 'nodisplay' na div de id = 'y_datahora'  se houver e retirar a classe da div de id = 'n_datahora' se houver. Caso seja false deve inserir a classe 'nodisplay' na div de id = 'n_datahora' se houver e retirar a classe da div de id = 'y_datahora' se houver.
+  if(e.target.checked){
+    y_datahora = document.getElementById('y_datahora')
+    y_datahora.classList.add('nodisplay');
+    var inputs = y_datahora.getElementsByTagName("input");
+    // Itera sobre os inputs e define o valor de cada um como vazio
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].value = "";
+    }
+    document.getElementById('n_datahora').classList.remove('nodisplay');
+  }else{
+    var n_datahora = document.getElementById('n_datahora');
+    n_datahora.classList.add('nodisplay');
+    var inputs = n_datahora.getElementsByTagName("input");
+    // Itera sobre os inputs e define o valor de cada um como vazio
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].value = "";
+    }
+    document.getElementById('y_datahora').classList.remove('nodisplay');
+    
+  }
+}); 
+
+document.getElementById("form-regindisp").addEventListener("submit", function(event) {
+  // Antes de submeter o formulario, salva os dados no localStorage
+  event.preventDefault();
+  
+  let formData = {
+      militarindisp: document.getElementById("militarindisp").value,
+      typeindisp: document.getElementById("typeindisp").value,
+      datainitindisp: document.getElementById("datainitindisp").value,
+      datafinalindisp: document.getElementById("datafinalindisp").value,
+      descindisp: document.getElementById("descindisp").value
+  };
+
+  localStorage.setItem("form-regindisp-data", JSON.stringify(formData));
+  
+  // Envia o formulario
+  this.submit();
+
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,800 @@
+{% extends 'base.html' %} {% load static %} {% load filters %} {% block 'title'%}Lista de Registros{% endblock %} {% block 'head' %}
+<link rel="stylesheet" href="{% static 'css/full-style.css' %}" />
+<style>
+  label.form-label {
+    color: #012970 !important;
+  }
+  th.ocultar,
+  td.ocultar {
+    display: none;
+  }
+  .table-dot tbody {
+    display: block; /* Permite que o tbody seja rolável */
+    max-height: 20em; /* Define a altura máxima */
+    overflow-y: auto; /* Permite a rolagem vertical quando necessário */
+  }
+
+  .table-dot thead,
+  .table-dot tbody tr {
+    display: table; /* Faz com que o thead e tr se comportem como uma tabela */
+    width: 100%; /* Faz com que o thead e tr ocupem a largura total da tabela */
+    table-layout: fixed; /* Garante que as células da tabela sejam de largura igual */
+  }
+
+  /* Estilo personalizado para os elementos <td> */
+  .table-dot td {
+    color: #012970; /* Cor de texto azul escuro */
+    font-size: 0.8em; /* Tamanho de fonte menor */
+    padding: 5px; /* Espaçamento interno, ajuste conforme necessário */
+  }
+
+  .modal-custom {
+    max-width: 50%; /* Ou o valor que você quiser */
+  }
+  /* Faz com que as duas primeiras células do cabeçalho sejam mais largas */
+  .dobro-segunda-coluna th:nth-child(1),
+  .dobro-segunda-coluna th:nth-child(2) {
+      width: 40%!important;
+  }
+  
+  /* Define a largura das outras células do cabeçalho, excluindo as duas primeiras */
+  .dobro-segunda-coluna th:not(:nth-child(1)):not(:nth-child(2)) {
+      width: 20%!important;
+  }
+  
+  /* Faz com que as duas primeiras colunas sejam mais largas */
+  .dobro-segunda-coluna td:nth-child(1),
+  .dobro-segunda-coluna td:nth-child(2) {
+      width: 40%;  /* Ajuste esse valor conforme desejar */
+  }
+  
+  /* Define a largura das outras colunas, excluindo as duas primeiras */
+  .dobro-segunda-coluna td:not(:nth-child(1)):not(:nth-child(2)) {
+      width: 20%;  /* Ajuste esse valor conforme desejar */
+  }
+  
+  .ocultar {
+      display: none!important; 
+  }
+  
+
+</style>
+
+{% endblock %}{% block 'content' %}
+
+<div class="card m-0">
+  <div class="card-body m-2">
+
+    <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
+      <li class="nav-item flex-fill" role="presentation">
+        <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab" aria-controls="home" aria-selected="true">Militares</button>
+      </li>
+      <li class="nav-item flex-fill" role="presentation">
+        <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab" aria-controls="profile" aria-selected="false">Empenhos</button>
+      </li>
+
+    </ul>
+    <div class="tab-content pt-2" id="myTabjustifiedContent">
+      <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row align-items-top">
+          <div class="col-xxl-12 col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <!-- Tabela de Militares -->
+                <table id="main-table_edit" class="table table-striped table-sm table-dot datatable">
+                  <thead>
+                      <tr>
+                          <th scope="col" class="rot-info rot-sm" >Nome</th>
+                          <th scope="col" class="rot-info rot-sm">Nº</th>
+                          <th scope="col" class="rot-info rot-sm">Post/Grad</th>
+                          <th scope="col" class="rot-info rot-sm">Local</th>
+                          <th scope="col" class="rot-info rot-sm">Qtd Escalas</th>
+                          <th scope="col" class="rot-info rot-sm">Típicas</th>
+                          <th scope="col" class="rot-info rot-sm">Atípicas</th>
+                          <th scope="col" class="rot-info rot-sm"></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for militar in militares %}
+                      <tr>
+                          <td class="rot-info rot-sm">{{militar.nome}}</td>
+                          <td class="rot-info rot-sm">{{militar.numero}}</td>
+                          <td class="rot-info rot-sm">{{militar.postgrad|formatpostgrad}}</td>
+                          <td class="rot-info rot-sm">{{militar.local|formatlocal}}</td>
+                          <td class="rot-info rot-sm">{{militar.qtd_empenhos}}</td>
+                          <td class="rot-info rot-sm">{{militar.empenhos_minutos_tipica|minutos_para_horas}}</td>
+                          <td class="rot-info rot-sm">{{militar.empenhos_minutos_atipica|minutos_para_horas}}</td>
+                          <td>
+                            <!-- Botão para apagar um registro-->
+                            <button 
+                            type="button" 
+                            class="btn btn-danger btn-sm" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalDeleteMilitar" 
+                            data-bs-idmil="{{militar.id}}"
+                            >
+                            <i class="ri-delete-bin-6-line"></i></button>                   
+                            <!-- Botão para editar um registro-->
+                            <button 
+                            type="button" 
+                            class="btn btn-primary btn-sm"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalEditMilitar"
+                            data-bs-idmil="{{militar.id}}"
+                            data-bs-numeromil="{{militar.numero}}"
+                            data-bs-nomemil="{{militar.nome}}"
+                            data-bs-postgradmil="{{militar.postgrad}}"
+                            data-bs-localmil="{{militar.local}}"
+                            > 
+                            <i class="ri-edit-box-line"></i>
+                          </button>    
+                          </td>             
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              
+                <!-- End Table with stripped rows -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="row align-items-top">
+          <div class="col-xxl-12 col-md-12"> 
+            <div class="card">
+              <div class="card-body">
+                <!-- Tabela de Empenhos -->
+                <table
+                  id="main-table_edit"
+                  class="table table-striped table-sm table-dot datatable"
+                >
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col" class="rot-info rot-sm">Nome</th>
+                      <th scope="col" class="rot-info rot-sm">Tipo</th>
+                      <th scope="col" class="rot-info rot-sm">D/H Inicial</th>
+                      <th scope="col" class="rot-info rot-sm">D/H Final</th>
+                      <th scope="col" class="rot-info rot-sm"></th>
+                  </thead>
+                  <tbody>
+                    {% for empenho in empenhos %}
+                    <tr>
+                      <td  class="rot-info rot-sm">{{empenho.nome}}</td>
+                      <td  class="rot-info rot-sm">{{empenho.tipo}}</td>
+                      <td  class="rot-info rot-sm">{{empenho.datahorainicial|formatdatetime}}</td>
+                      <td  class="rot-info rot-sm">{{empenho.datahorafinal|formatdatetime}}</td>
+                      <td>
+                        <!-- Botão para apagar um registro-->
+                        <button 
+                        type="button" 
+                        class="btn btn-danger btn-sm" 
+                        data-bs-target="#modalDeleteEmpenho" 
+                        data-bs-toggle="modal"
+                        data-bs-idemp="{{empenho.id}}"
+                        >
+                        <i class="ri-delete-bin-6-line"></i></button>                   
+                        <!-- Botão para editar um registro-->
+                        <a 
+                        class="btn btn-primary btn-sm edit-btn"
+                        href="{% url 'editar_empenho' empenho.id %}"
+                        > 
+                        <i class="ri-edit-box-line"></i>
+                      </a>    
+                      </td>               
+                    </tr>                    
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- End Default Tabs -->
+
+  </div>
+</div>
+  <!-- Modal Delete Militar Inicio -->
+  <div class="modal fade" id="modalDeleteMilitar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="modaltitletask" class="modal-title fw-bold text-danger">Excluir Militar </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body m-0 p-0">
+          <form id="formDelMilitar" data-action="{% url 'delete_militar' 0 %}" method="POST">
+            {% csrf_token %}
+            <h5 class="card-title m-0 text-center"> Realmente deseja apagar permanentemente o Militar?</h5>
+            <hr>
+            <div class="d-flex justify-content-center align-items-center m-2">
+              <button type="submit" class="btn btn-danger mx-3">Excluir</button>
+              <button
+              type="button"
+              class="btn btn-secondary mx-3"
+              data-bs-dismiss="modal"
+              >
+              Cancelar
+            </button>
+            </div>
+        </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- Modal Delete Militar Fim -->
+  <!-- Modal Delete Empenho Inicio -->
+  <div class="modal fade" id="modalDeleteEmpenho" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="modaltitleEmpenho" class="modal-title fw-bold text-danger">Excluir Empenho </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body m-0 p-0">
+          <form id="formDelEmpenho" data-action="{% url 'delete_empenho' 0 %}" method="POST">
+            {% csrf_token %}
+            <h5 class="card-title m-0 text-center"> Realmente deseja apagar permanentemente o Empenho?</h5>
+            <hr>
+            <div class="d-flex justify-content-center align-items-center m-2">
+              <button type="submit" class="btn btn-danger mx-3">Excluir</button>
+              <button
+              type="button"
+              class="btn btn-secondary mx-3"
+              data-bs-dismiss="modal"
+              >
+              Cancelar
+            </button>
+            </div>
+        </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- Modal Delete Empenho Fim -->
+  <!-- Modal Edit Militar -->
+<div class="modal fade" id="modalEditMilitar" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable modal-custom">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="modaltitlemilitar" class="modal-title fw-bold">Editar Militar</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="formEditMilitar" data-action="{% url 'edit_militar' 0 %}" method="POST">
+          {% csrf_token %}
+          <div class="container">
+            <div class="row py-2">
+              <div class="col-md-6">
+                <label for="numbmform" class="form-label text-primary"
+                  >Nº BM</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="numbmform"
+                  name="numbmform"
+                  maxlength="8"                    
+                  placeholder="Digite apenas os números"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="namebmform" class="form-label text-primary"
+                  >Nome</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="namebmform"
+                  name="namebmform"
+                  required
+                />
+              </div>
+            </div>
+            <div class="row py-2">
+              <div class="col-md-6">
+                <label for="postgradbmform" class="form-label text-primary"
+                  >Posto/Grad</label
+                >
+                <select
+                  class="form-select"
+                  aria-label="Default"
+                  id="postgradbmform"
+                  name="postgradbmform"
+                  required
+                >
+                  <option selected disabled>Escolha o Posto/Grad</option>
+                  <option value="sd2cl">Sd 2ª Classe BM</option>
+                  <option value="sd">Sd BM</option>
+                  <option value="cb">Cb BM</option>
+                  <option value="3sgt">3º Sgt BM</option>
+                  <option value="2sgt">2º Sgt BM</option>
+                  <option value="1sgt">1º Sgt BM</option>
+                  <option value="subten">Sub Ten BM</option>
+                  <option value="2ten">2º Ten BM</option>
+                  <option value="1ten">1º Ten BM</option>
+                  <option value="cap">Cap BM</option>
+                  <option value="maj">Maj BM</option>
+                  <option value="tencel">Ten Cel BM</option>
+                  <option value="cel">Cel BM</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="localbmform" class="form-label text-primary"
+                  >Local</label
+                >
+                <select
+                  class="form-select"
+                  aria-label="Default"
+                  id="localbmform"
+                  name="localbmform"
+                  required
+                >
+                  <option selected disabled>Escolha a Local do Militar</option>
+                  <option value="acf">ACF</option>
+                  <option value="acf1">ACF-1</option>
+                  <option value="acf2">ACF-2</option>
+                  <option value="acf3">ACF-3</option>
+                  <option value="sdts1">SDTS-1</option>
+                  <option value="sdts2">SDTS-2</option>
+                  <option value="sdts3">SDTS-3</option>
+                  <option value="nts">NTS</option>
+                  <option value="gol">GOL</option>
+                  <option value="sdal">SDAL</option>
+                  <option value="sdal1">SDAL-1</option>
+                  <option value="sdal2">SDAL-2</option>
+                  <option value="sdal3">SDAL-3</option>
+                  <option value="sdal4">SDAL-4</option>
+                  <option value="secretaria">Secretaria</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+          <div class="row align-items-top my-2" id="container-teste">
+            <div class="col-xxl-12 col-md-12">
+              <div class="line-container">
+                <div class="line"></div>
+                <span class="span-line">Relação de Empenhos</span>
+                <div class="line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row form-dep py-0">
+
+            <div class="col py-2">
+              <label for="empfull" class="form-label me-2"
+                >Empenho:
+              </label>
+              <select
+                class="filtrado form-select"
+                aria-label="Default select"
+                id="empfull"
+                name="empfull"
+              >
+                <option disabled selected>Selecione o empenho</option>
+                {% for empenho in empenhos %}
+                <option value="{{empenho.id}};{{empenho.nome}};{{empenho.datahorainicial|formatdatetime}};{{empenho.datahorafinal|formatdatetime}};{{empenho.duracao_em_minutos_tipica}};{{empenho.duracao_em_minutos_atipica}}">{{empenho.nome}} - {{empenho.datahorainicial|formatdatetime}} a {{empenho.datahorafinal|formatdatetime}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div id="alert3" class="row form-dep py-0 mx-4"></div>
+          <div class="row form-dep py-0">
+            <div class="col-md-12 d-flex justify-content-center">
+              <input
+                type="button"
+                value="Adicionar"
+                id="addEmpenho"
+                class="btn btn-secondary my-3 comon-button"
+                onclick="insereTable()"
+              />
+            </div>
+          </div>
+          <div class="row form-dep py-0">
+            <div class="col-md-12 py-2">
+              <table class="table table-bordered border-secondary align-middle justify-content-center dobro-segunda-coluna" name="empenhosTable" id="empenhosTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Empenho</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Típicas</th>
+                        <th scope="col">Atípicas</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <span class="diplayvtr d-flex justify-content-center" id="hasmilitar">Não há empenhos para o Militar</span>
+            </div>
+            <input type="hidden" name="all_data" id="all_data" value="">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success w-50 fw-bold">Salvar alterações</button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <!-- Cria botão limpar-->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Modal Edit Militar-->
+
+{% endblock %}
+{% block 'myscripts' %}
+<script>
+// Troca o data-action do modal que apaga militar
+const modalDeleteMilitar = document.getElementById('modalDeleteMilitar')
+if(modalDeleteMilitar){
+  modalDeleteMilitar.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extraindo de data-bs-* o conteudo
+    const idmilitar = button.getAttribute('data-bs-idmil')
+    const formDelMilitar = document.querySelector('#formDelMilitar')
+    let url = formDelMilitar.getAttribute("data-action");
+    url = url.replace('0',idmilitar)
+    formDelMilitar.setAttribute("action", url);
+})
+}
+
+// Troca o data-action do modal que apaga empenho
+const modalDeleteEmpenho = document.getElementById('modalDeleteEmpenho')
+if(modalDeleteEmpenho){
+  modalDeleteEmpenho.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extraindo de data-bs-* o conteudo
+    const idempenho = button.getAttribute('data-bs-idemp')
+    const formDelEmpenho = document.querySelector('#formDelEmpenho')
+    let url = formDelEmpenho.getAttribute("data-action");
+    url = url.replace('0',idempenho)
+    formDelEmpenho.setAttribute("action", url);
+})
+}
+
+document.getElementById('numbmform').addEventListener('input', function() {
+  var valor = this.value.replace(/\D/g, ''); // remove caracteres não numéricos
+  if (valor.length >= 6) {
+      valor = valor.replace(/(\d{3})(\d{3})(\d{1})/, "$1.$2-$3");
+  }
+  this.value = valor;
+});
+
+function normalizepostgrad(value) {
+  switch (value) {
+      case 'sd2cl':
+          return 'Sd 2ª Classe BM';
+      case 'sd':
+          return 'Sd BM';
+      case 'cb':
+          return 'Cb BM';
+      case '3sgt':
+          return '3º Sgt BM';
+      case '2sgt':
+          return '2º Sgt BM';
+      case '1sgt':
+          return '1º Sgt BM';
+      case 'subten':
+          return 'Sub Ten BM';
+      case '2ten':
+          return '2º Ten BM';
+      case '1ten':
+          return '1º Ten BM';
+      case 'cap':
+          return 'Cap BM';
+      case 'maj':
+          return 'Maj BM';
+      case 'tencel':
+          return 'Ten Cel BM';
+      case 'cel':
+          return 'Cel BM';
+      default:
+          return value;
+  }
+}
+
+// Injetando dados no model 
+const modalEditMilitar = document.getElementById('modalEditMilitar')
+    if(modalEditMilitar){
+
+      modalEditMilitar.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        const button = event.relatedTarget
+
+        const button2 = document.getElementById('addEmpenho')
+
+        button2.setAttribute('data-bs-idmil', button.getAttribute('data-bs-idmil'))
+        // Extraindo de data-bs-* o conteudo
+        const idmil = button.getAttribute('data-bs-idmil')
+        const numeromil = button.getAttribute('data-bs-numeromil')
+        const nomemil = button.getAttribute('data-bs-nomemil')
+        const postgradmil = button.getAttribute('data-bs-postgradmil')
+        const localmil = button.getAttribute('data-bs-localmil')
+        const normpostgrad = normalizepostgrad(postgradmil)
+
+      // Atualizando campos do meu model militar
+      const modalEditMilitar = document.getElementById('modalEditMilitar')
+      const modalTitleMilitar = document.getElementById('modaltitlemilitar')
+      const modalnumbm = document.getElementById('numbmform')
+      const modalnamebm = document.getElementById('namebmform')
+      const modalpostgrad = document.getElementById('postgradbmform')
+      const modallocalbm = document.getElementById('localbmform')
+
+
+      // Rotulos dinamicos de acordo com a resposta
+      modalTitleMilitar.textContent =  "Editar - " + normpostgrad +" "+ nomemil
+      modalnumbm.value = numeromil
+      modalnamebm.value = nomemil
+      modalpostgrad.value = postgradmil
+      modallocalbm.value = localmil
+ 
+
+      // Ajusta a url do form do modal
+      const formEditMilitar = document.querySelector('#formEditMilitar')
+      let url = formEditMilitar.getAttribute("data-action");
+      console.log(`URL: ${url}`)
+      url = url.replace('0',idmil)
+      console.log(`URL: ${url}`)
+      console.log(`ID: ${idmil}`)
+      formEditMilitar.setAttribute("action", url);
+
+        })
+    }
+
+     document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll("#main-table_edit > tbody > tr > td > button.btn.btn-primary").forEach(function(button) {
+        button.addEventListener('click', function() {
+              var militarId = this.getAttribute('data-bs-idmil');
+              fetch('/cadastros/get_empenhos/' + militarId + '/')
+                  .then(response => response.json())
+                  .then(empenhos => {
+                      // Limpar a tabela atual
+                      var tbody = document.querySelector("#empenhosTable > tbody");
+                      tbody.innerHTML = '';
+                      testelocal = document.getElementById("container-teste")
+                      console.log(`Os empenhos: ${empenhos}`)
+                      // converte datahorainicial para data no formato dd/mm/yyyy
+                      empenhos.forEach(function(empenho) {
+                        empenho.datahorainicial = empenho.datahorainicial.split('T')[0].split('-').reverse().join('/') + ' ' + empenho.datahorainicial.split('T')[1].slice(0, 5);
+                        empenho.datahorafinal = empenho.datahorafinal.split('T')[0].split('-').reverse().join('/') + ' ' + empenho.datahorafinal.split('T')[1].slice(0, 5);
+                      });
+                      // Preencher a tabela com empenhos
+                      empenhos.forEach(function(empenho) {
+                          var row = tbody.insertRow();
+                          row.insertCell(0).textContent = empenho.nome;
+                          row.insertCell(1).textContent = `${empenho.datahorainicial} a ${empenho.datahorafinal}` || empenho.datahorainicial;
+                          row.insertCell(2).textContent = minutosParaHoras(empenho.duracao_em_minutos_tipica);
+                          row.insertCell(3).textContent = minutosParaHoras(empenho.duracao_em_minutos_atipica);
+                          //Celula do REF 
+                          var cell_ident = row.insertCell(4);
+                          cell_ident.textContent = empenho.id;
+                          cell_ident.classList.add("ocultar");
+                          // Celula do BTN
+                          var cell_btn = row.insertCell(5);
+                          cell_btn.innerHTML = '<a href="#" class="btn btn-danger p-1 fw-bold w-50" onclick="removerElemento(event.target)">X</a>';
+                          cell_btn.classList.add("text-center");
+                      });
+                      // Se não houver empenhos o display do span de id hasmilitar é alterado para block, caso tenha empenhos o display é alterado para none
+                      var span = document.querySelector('#hasmilitar');
+                      console.log(`Quantidade de empenhos: ${empenhos.length}`)
+                      if (empenhos.length == 0) {
+                        document.getElementById('hasmilitar').classList.remove('ocultar');
+                      } else {
+                        document.getElementById('hasmilitar').classList.add('ocultar');
+                      }
+
+                      // Exibir o modal
+                      var modal = document.querySelector('#modalEditMilitar');
+                      modal.style.display = 'block';
+                  })
+                  .catch(error => console.error('Error:', error));
+          });
+      });
+  });
+  function removerElemento(elementoClicado) {
+    var tr = elementoClicado.parentNode.parentNode;
+    tr.parentNode.removeChild(tr);
+  }
+
+
+  // Função que recebe datahorainicial e datahorafinal no formato 2023-09-05T15:00:00Z e retorna a diferença em hora minuto no formato HH:MM
+  function getDuration(datahorainicial, datahorafinal) {
+    var datahorainicial = new Date(datahorainicial);
+    var datahorafinal = new Date(datahorafinal);
+    var diff = Math.abs(datahorafinal - datahorainicial);
+    var minutes = Math.floor((diff/1000)/60);
+    var hours = Math.floor(minutes/60);
+    minutes = minutes % 60;
+    return hours + ':' + minutes;
+  }
+
+  
+ async function insereTable(){
+    async function main_runner() {
+      var adiciona_row = true;
+      // Pega o valor do select com id empfull e divide seus valores em um array através do split pelo caracter ';'
+      var empfull = document.getElementById("empfull")
+      button2 = document.getElementById("addEmpenho");
+      militarId = button2.getAttribute('data-bs-idmil');
+
+      listDates = [];
+      listMaster = []
+      var main_dates = "";
+
+      if (empfull.value == "Selecione o empenho") {
+        
+        launchErrorDefault("Selecione um empenho","alert3");
+        return
+      }else{
+        empfull = empfull.value.split(';');
+      }
+
+      empenhos = regisTab();
+    
+      for(let emp of empenhos){
+        if(emp == empfull[0]){
+          
+          launchErrorDefault("Empenho já adicionado para o militar", "alert3");
+          return;
+        }
+      }
+      // Pega a primeira positição do de empfull que é o id do empenho e verifica se em alguma linha da tabela de id empenhosTable na coluna 3 (que é a coluna do id do empenho) tem o mesmo valor. Se tiver, exibir um alert "Empenho já adicionado para o militar"
+      var table = document.querySelector("#empenhosTable > tbody");
+      var rows = table.rows;
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        var cell = row.cells[3];
+
+        if (cell.textContent == empfull[0]) {
+          alert("Empenho já adicionado para o militar");
+          return;
+        }
+
+        console.log(row.cells[1].textContent)
+        main_dates = row.cells[1].textContent.split("a")
+        
+        listDates.push(main_dates[0].trim());
+        listDates.push(main_dates[1].trim());
+        listMaster.push(listDates);
+        listDates = [];
+      }
+      var semaforo = datasSobrepostas(empfull[2], empfull[3], listMaster);
+      if(semaforo){
+        
+        launchErrorDefault("Você não pode inserir esse empenho pois o militar já possui outro para essa mesma data", "alert3");
+        return;
+      }
+
+      try {
+      const response = await fetch('/cadastros/is_permited_empenho/' + militarId + '/' + empfull[0] + '/');
+      const data = await response.json();
+
+        if(!data.is_permited){
+          let objeto_main = data.obj_indisp ? data.obj_indisp : data.obj_empenho;
+          if(data.typepermited == 'indisponibilidade'){
+            console.log("Entrou aqui...Indisponibilidade");
+            adiciona_row = 'indisponibilidade';
+            console.log(adiciona_row)
+            
+            launchErrorDefault(`Empenho não pode ser adicionado pois existe a indisponibilidade:${objeto_main[0]} - ${objeto_main[1]} para o militar de ${converterParaFormatoBrasileiro(objeto_main[2])} a ${converterParaFormatoBrasileiro(objeto_main[3])}`,"alert3");
+            return;
+          }else if(data.typepermited == 'empenho'){
+            console.log("Entrou aqui...Empenho");
+            adiciona_row = 'empenho';
+            console.log(adiciona_row)
+            
+            launchErrorDefault(`Empenho não pode ser adicionado para o militar já está empenhado na data em ${objeto_main[0]} de ${converterParaFormatoBrasileiro(objeto_main[1])} a ${converterParaFormatoBrasileiro(objeto_main[2])}`,"alert3");
+            return;
+          }
+        //ra o militar de 07/09/2023 00:00 a 09/12/2023 23:59. 
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }    
+
+      // Caso não exista deve ser criada uma linha e inserida na ultima posição com o valor 2º valor do array empfull que é o nome do empenho, o 3º valor do array empfull que é a datahorainicial e o 4º valor do array empfull que é a duração em minutos
+      var table = document.querySelector("#empenhosTable > tbody");
+      var row = table.insertRow(-1);
+      var cell1 = row.insertCell(0);
+      cell1.textContent = empfull[1];
+      var cell2 = row.insertCell(1);
+      cell2.textContent = `${empfull[2]} a ${empfull[3]}`;
+      var cell3 = row.insertCell(2);
+      let dur1 = minutosParaHM(empfull[4]);
+      console.log("dur: ", dur1)
+      cell3.textContent = dur1;
+      var cell4 = row.insertCell(3);
+      let dur2 = minutosParaHM(empfull[5]);
+      console.log("dur: ", dur2)
+      cell4.textContent = dur2;
+      //Celula do REF
+      var cell_ident = row.insertCell(4);
+      cell_ident.textContent = empfull[0];
+      cell_ident.classList.add("ocultar");
+      // Celula do BTN
+      var cell_btn = row.insertCell(5);
+      cell_btn.innerHTML = '<a href="#" class="btn btn-danger p-1 fw-bold w-50" onclick="removerElemento(event.target)">X</a>';
+      cell_btn.classList.add("text-center");
+      // Se não houver empenhos o display do span de id hasmilitar é alterado para block, caso tenha empenhos o display é alterado para none
+      var span = document.querySelector('#hasmilitar');
+      if (table.rows.length == 1) {
+        document.getElementById('hasmilitar').classList.remove('ocultar');
+      } else {
+        document.getElementById('hasmilitar').classList.add('ocultar');
+      }
+    }
+    try {
+      await main_runner();
+    } catch (error) {
+        console.error('Error:', error);
+    }
+  }
+
+  // Onsubmit do form de id formEditMilitar. Faz preventDefault trata dos dados e depois faz o submit
+  document.getElementById("formEditMilitar").addEventListener("submit", function(event){
+    event.preventDefault();
+    
+    empenhos = regisTab();
+    console.log(empenhos)
+
+    // Cria um objeto com os dados do militar
+    var militar = {
+      'empenhos': empenhos
+    };
+    console.log(JSON.stringify(militar))
+    // Insere o valor de JSON.stringify no input de id all_data e faz o submit do formulario
+    document.getElementById("all_data").value = JSON.stringify(militar);
+    this.submit();
+  });
+  
+  function regisTab(){
+    var table = document.getElementById("empenhosTable");
+    // Pega a quantidade de linhas da tabela
+    var rows_len = table.rows.length;
+    var rows = table.rows;
+    // Cria um array vazio
+    var empenhos = [];
+    // Percorre a tabela e adiciona os valores de cada linha e adiciona a empenhos apenas o campo em que consta o id do empenho
+    for (var i = 0; i < rows_len; i++) {
+      console.log(i, rows)
+      var row = rows[i];
+      var cell = row.cells[4];
+      empenhos.push(cell.textContent);
+    }
+
+    return empenhos
+  }
+
+</script>
+{% endblock %}

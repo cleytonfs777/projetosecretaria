@@ -1,0 +1,295 @@
+{% extends 'base.html' %} {% load static %} {% load filters %} {% block 'title'%}Cadastros{% endblock %} {% block 'head' %}
+<link rel="stylesheet" href="{% static 'css/full-style.css' %}" />
+<style>
+.main-title-form {
+  font-size: 1.5em;
+  font-weight: bold;
+  background-color: var(--primary-color);
+  margin-bottom: 0.5em;
+  color: var(--secondary-color);
+  width:100%;
+  text-align:center;
+  padding: 0.5em;
+}
+.ocultar {
+  display: none!important; 
+}
+</style>
+{% endblock %}{% block 'content' %}
+<div class="row align-items-top">
+  <!-- Fase Card -->
+  <div class="col-xxl-12 col-md-12">
+    <div class="card info-card revenue-card">
+      <div class="card-body">
+        <form id="formcadastramil" action="{% url 'cadastrar_militar' %}" method="POST">
+          {% csrf_token %}
+          <!-- Etapa 1 -->
+          <div class="form-etapa">
+            <div class="d-flex flex-row justify-content-center align-items-center">
+              <h3 class="main-title-form">CADASTRAR MILITAR</h3>
+            </div>
+            <div class="container">
+              <div class="row py-2">
+                <div class="col-md-6">
+                  <label for="numbm" class="form-label text-primary"
+                    >Nº BM</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="numbm"
+                    name="numbm"
+                    maxlength="8"                    
+                    placeholder="Digite apenas os números"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="namebm" class="form-label text-primary"
+                    >Nome</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="namebm"
+                    name="namebm"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row py-2">
+                <div class="col-md-6">
+                  <label for="postgradbm" class="form-label text-primary"
+                    >Posto/Grad</label
+                  >
+                  <select
+                    class="form-select"
+                    aria-label="Default"
+                    id="postgradbm"
+                    name="postgradbm"
+                    required
+                  >
+                    <option selected disabled>Escolha o Posto/Grad</option>
+                    <option value="sd2cl">Sd 2ª Classe BM</option>
+                    <option value="sd">Sd BM</option>
+                    <option value="cb">Cb BM</option>
+                    <option value="3sgt">3º Sgt BM</option>
+                    <option value="2sgt">2º Sgt BM</option>
+                    <option value="1sgt">1º Sgt BM</option>
+                    <option value="subten">Sub Ten BM</option>
+                    <option value="2ten">2º Ten BM</option>
+                    <option value="1ten">1º Ten BM</option>
+                    <option value="cap">Cap BM</option>
+                    <option value="maj">Maj BM</option>
+                    <option value="tencel">Ten Cel BM</option>
+                    <option value="cel">Cel BM</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="localbm" class="form-label text-primary"
+                    >Local</label
+                  >
+                  <select
+                    class="form-select"
+                    aria-label="Default"
+                    id="localbm"
+                    name="localbm"
+                    required
+                  >
+                    <option selected disabled>Escolha a Local do Militar</option>
+                    <option value="acf">ACF</option>
+                    <option value="sdts1">SDTS 1</option>
+                    <option value="sdts2">SDTS 2</option>
+                    <option value="sdts3">SDTS 3</option>
+                    <option value="nts">NTS</option>
+                    <option value="sdal1">SDAL 1</option>
+                    <option value="sdal2">SDAL 2</option>
+                    <option value="sdal3">SDAL 3</option>
+                    <option value="sdal4">SDAL 4</option>
+                    <option value="sec">Secretaria</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row align-items-top my-4">
+                <div class="col-xxl-12 col-md-12">
+                  <div class="line-container">
+                    <div class="line"></div>
+                    <span class="span-line">Relação de Empenhos</span>
+                    <div class="line"></div>
+                  </div>
+                </div>
+              </div>
+              <div id="myalert" class="row form-dep py-0">
+              </div>
+              <div class="row form-dep py-0">
+                <div class="col py-2">
+                  <label for="empmil" class="form-label me-2"
+                    >Empenho:
+                  </label>
+                  <select
+                    class="filtrado form-select"
+                    aria-label="Default select"
+                    id="empmil"
+                    name="empmil"
+                  >
+                    <option disabled selected>Selecione o empenho</option>
+                    {% for empenho in empenhos %}
+                    <option value="{{empenho.id}};{{empenho.nome}};{{empenho.datahorainicial|formatdatetime}};{{empenho.datahorafinal|formatdatetime}};{{empenho.duracao_em_minutos_tipica}};{{empenho.duracao_em_minutos_atipica}}">{{empenho.nome}} - {{empenho.datahorainicial|formatdatetime}} a {{empenho.datahorafinal|formatdatetime}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="row form-dep py-0">
+                <div class="col-md-12 d-flex justify-content-center">
+                  <input
+                    type="button"
+                    value="Adicionar"
+                    class="btn btn-secondary my-3 comon-button"
+                    onclick="insereTable()"
+                  />
+                </div>
+              </div>
+              <div class="row form-dep py-0">
+                <div class="col-md-12 py-2">
+                  <table class="table table-bordered border-secondary align-middle justify-content-center dobro-primeira-coluna table-striped" name="empenhosTableMil" id="empenhosTableMil">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Empenho</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">H. Típica</th>
+                            <th scope="col">H. Atípica</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                </div>
+                <input type="hidden" name="emp_mil_data" id="emp_mil_data" value="">
+              </div>
+              <div class="row py-2 d-flex justify-content-center my-4">
+                <button class="btn btn-success w-50 fw-bold" type="submit">CADASTRAR</button>
+              </div>
+            </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('numbm').addEventListener('input', function() {
+    var valor = this.value.replace(/\D/g, ''); // remove caracteres não numéricos
+    if (valor.length >= 6) {
+        valor = valor.replace(/(\d{3})(\d{3})(\d{1})/, "$1.$2-$3");
+    }
+    this.value = valor;
+});
+function insereTable(){
+  // Pega o valor do select com id empfull e divide seus valores em um array através do split pelo caracter ';'
+  var empfull = document.getElementById("empmil")
+
+  listDates = [];
+  listMaster = []
+  var main_dates = "";
+
+  if (empfull.value == "Selecione o empenho") {
+    launchErrorDefault("Selecione um empenho","myalert");
+    return
+  }else{
+    empfull = empfull.value.split(';');
+  }
+
+  // Pega a primeira positição do de empfull que é o id do empenho e verifica se em alguma linha da tabela de id empenhosTableMil na coluna 3 (que é a coluna do id do empenho) tem o mesmo valor. Se tiver, exibir um alert "Empenho já adicionado para o militar"
+  var table = document.querySelector("#empenhosTableMil > tbody");
+  var rows = table.rows;
+  for (var i = 0; i < rows.length; i++) {
+    var row = rows[i];
+    var cell = row.cells[3];
+    var idcell = row.cells[4];
+    console.log(row.cells[1].textContent)
+    main_dates = row.cells[1].textContent.split("a")
+    
+    listDates.push(main_dates[0].trim());
+    listDates.push(main_dates[1].trim());
+    listMaster.push(listDates);
+    listDates = [];
+    if (cell.textContent == empfull[0]) {
+      alert("Empenho já adicionado para o militar");
+      return;
+    }
+
+
+  }
+  var semaforo = datasSobrepostas(empfull[2], empfull[3], listMaster);
+  if(semaforo){
+    launchErrorDefault("Você não pode inserir esse empenho pois o militar já possui outro para essa mesma data", "myalert");
+    return;
+  }
+  // Caso não exista deve ser criada uma linha e inserida na ultima posição com o valor 2º valor do array empfull que é o nome do empenho, o 3º valor do array empfull que é a datahorainicial e o 4º valor do array empfull que é a duração em minutos
+  var row = table.insertRow(-1);
+  var cell1 = row.insertCell(0);
+  cell1.textContent = empfull[1];
+  var cell2 = row.insertCell(1);
+  cell2.textContent = `${empfull[2]} a ${empfull[3]}`;
+  var cell3 = row.insertCell(2);
+  let dur1 = minutosParaHM(empfull[4]);
+  console.log("dur: ", dur1)
+  cell3.textContent = dur1;
+  var cell4 = row.insertCell(3);
+  let dur2 = minutosParaHM(empfull[5]);
+  console.log("dur: ", dur2)
+  cell4.textContent = dur2;
+  //Celula do REF
+  var cell_ident = row.insertCell(4);
+  cell_ident.textContent = empfull[0];
+  cell_ident.classList.add("ocultar");
+  // Celula do BTN
+  var cell_btn = row.insertCell(5);
+  cell_btn.innerHTML = '<a href="#" class="btn btn-danger p-1 fw-bold w-50" onclick="removerElemento(event.target)">X</a>';
+  cell_btn.classList.add("text-center");
+
+}
+function removerElemento(elementoClicado) {
+  var tr = elementoClicado.parentNode.parentNode;
+  tr.parentNode.removeChild(tr);
+}
+
+// Onsubmit do form de id formEditMilitar. Faz preventDefault trata dos dados e depois faz o submit
+document.getElementById("formcadastramil").addEventListener("submit", function(event){
+  event.preventDefault();
+  // Pega a tabela com id empenhosTable
+  var table = document.getElementById("empenhosTableMil");
+  // Pega a quantidade de linhas da tabela
+  var empenhos = [0];
+
+  var rows_len = table.rows.length;
+  var rows = table.rows;
+  console.log(`rows: ${rows_len}`)
+  // Cria um array vazio
+  // Percorre a tabela e adiciona os valores de cada linha e adiciona a empenhos apenas o campo em que consta o id do empenho
+  for (var i = 0; i < rows_len; i++) {
+    console.log(i, rows)
+    var row = rows[i];
+    var cell = row.cells[4];
+    console.log(cell.textContent)
+    empenhos.push(cell.textContent);
+  }
+
+  console.log(`Empenhos ${empenhos}`)
+
+  // Cria um objeto com os dados do militar
+  var militar = {
+    'empenhos': empenhos
+  };
+  //console.log(JSON.stringify(militar))
+  // Insere o valor de JSON.stringify no input de id emp_mil_data e faz o submit do formulario
+  document.getElementById("emp_mil_data").value = JSON.stringify(militar);
+  this.submit();
+});
+
+
+
+</script>
+{% endblock %}

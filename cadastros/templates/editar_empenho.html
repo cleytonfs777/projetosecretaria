@@ -1,0 +1,888 @@
+{% extends 'base.html' %} {% load static %} {% load filters %} {% block 'title'%}Cadastro de Empenho{% endblock %} {% block 'head' %}
+<link rel="stylesheet" href="{% static 'css/full-style.css' %}" />
+<!-- Estilo do Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+  .main-title-form {
+    font-size: 1.5em;
+    font-weight: bold;
+    background-color: #052203;
+    margin-bottom: 0.5em;
+    color: #69e460;
+    width:100%;
+    text-align:center;
+    padding: 0.5em;
+  }
+  input[type="datetime-local"]::-webkit-datetime-edit-text { 
+    color: transparent; 
+  }
+  span.span-line {
+    color: #198754;
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 15px;
+  }
+  .line {
+    flex-grow: 1; /* faz com que as linhas ocupem todo o espaço disponível */
+    height: 2px; /* define a espessura da linha */
+    background: #198754;; /* define a cor da linha */
+  }
+  .modal-custom {
+    max-width: 80%; /* ou o valor que preferir */
+}
+
+table#InsertMilEmp th {
+  font-size: 0.2em;
+  text-align: center;
+  color: red;
+}
+.minha-tabela {
+  min-width: 680px;
+  overflow-x: auto;
+}
+.table-wrapper {
+overflow-x: auto;
+}
+.largura-dobrada {
+  width: 40%!important;
+}
+
+.largura-normal {
+  width: 10%!important;
+}
+
+</style>
+{% endblock %}{% block 'content' %}
+
+<div class="row align-items-top">
+  <!-- Fase Card -->
+  <div class="col-xxl-12 col-md-12">
+    <div class="card info-card revenue-card">
+      <div class="card-body">
+        <form id="form-etapas" action="{% url 'editar_empenho' empenho.id %}" method="POST">
+          {% csrf_token %}
+          <!-- Etapa 1 -->
+          <div class="form-etapa">
+            <div class="d-flex flex-row justify-content-center align-items-center">
+              <h3 class="main-title-form">EDITAR EMPENHO</h3>
+            </div>
+            <div class="container">
+              {{empenho.observacoes}}
+              <div class="row py-2">
+                <div class="col-md-6">
+                  <label for="namemp" class="form-label text-success"
+                    >Nome</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="namemp"
+                    name="namemp"
+                    value="{{ empenho.nome }}"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="tipoemp" class="form-label text-success"
+                    >Tipo</label
+                  >
+                  <select
+                    class="form-select"
+                    aria-label="Default"
+                    id="tipoemp"
+                    name="tipoemp"
+                    required
+                  >
+                    <option selected disabled>Escolha o Tipo</option>
+                    <option value="escala" {% if empenho.tipo == 'escala' %}selected{% endif %}>Escala</option>
+                    <option value="demanda"> {% if empenho.tipo == 'demanda' %}selected{% endif %}Demanda</option>
+                    <option value="dsp"> {% if empenho.tipo == 'dsp' %}selected{% endif %}DSP</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row py-2">
+                <div class="col-xxl-6 col-md-6">
+                  <div class="card info-card revenue-card">
+                    <div class="card-body">
+                      <h5 class="card-title text-success">
+                        Documentação <span class="text-success">| Numero de documento referência</span>
+                      </h5>
+                      <div class="d-flex flex-column align-items-center">
+                        <div class="input-group mb-3">
+                          <button
+                            class="btn btn-success fw-bold"
+                            type="button"
+                            id="button-addon1-new"
+                          >
+                            +
+                          </button>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="inputText-new"
+                            placeholder=""
+                            aria-label="Example text with button addon"
+                            aria-describedby="button-addon1-new"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End LOCALIZADO Card -->
+                <!-- LOCALIZADO Card -->
+                <div class="col-xxl-6 col-md-6">
+                  <div class="card info-card revenue-card">
+                    <div class="card-body">
+                      <div class="d-flex flex-column align-items-center">
+                        <div
+                          class="list-container d-flex flex-column justify-content-around w-100 changeble-item"
+                          id="listContainer-new"
+                          style="height: 8.8em; overflow-y: auto"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- input que deve ser escontido -->
+                <input
+                  type="hidden"
+                  class="form-control changeble-item"
+                  name="hiddensei"
+                  id="hiddensei"
+                  value="{{ empenho.documentacao }}"
+                />
+              </div>
+              <div class="row py-2">
+                <div class="col-md-12">
+                  <label for="obsemp" class="form-label text-success"
+                    >Observações</label
+                  >
+                  <textarea
+                    class="form-control changeble-item"
+                    style="height: 130px; font-size: 0.8em"
+                    id="obsemp"
+                    name="obsemp"
+                  >{{empenho.observacoes}}</textarea>
+                </div>
+              </div>
+              <div id="alert2" class="row form-dep py-0">
+              </div>
+              <div class="row py-2 my-4 border border-success border-4 rounded bg-success-light">
+                <p class="text-center fw-bold">Periodo do Empenho</p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="datahorainicial" class="form-label text-success"
+                      >Data/Hora Inicial</label
+                    >
+                    <input type="datetime-local" class="form-control datepicker generate-hour" id="datahorainicial" name="datahorainicial" value="{{ empenho.datahorainicial|formatdatetime }}" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="datahorafinal" class="form-label text-success"
+                      >Data/Hora Final</label
+                    >
+                    <input type="datetime-local" class="form-control datepicker generate-hour" id="datahorafinal" name="datahorafinal" value="{{ empenho.datahorafinal|formatdatetime }}" required>
+                  </div>
+                </div>
+                <div class="row align-items-top mt-4">
+                  <div class="col-xxl-12 col-md-12">
+                    <div class="line-container">
+                      <div class="line"></div>
+                      <span class="span-line">Divisão de Horas</span>
+                      <div class="line"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="content-loader hidden d-flex justify-content-center align-items-center p-3">
+                  <span class="loader"></span>
+                </div>
+                <div class="row py-2 d-flex justify-content-around align-items-center" id="main-content">
+                  <div style="display: none!important;" class="col-md-2 d-flex flex-column justify-content-center align-items-center button-calc" id="button-calc">
+                    <button type="button" id="calcular" name="calcular" class="btn btn-sm my-2 btn-success fw-bold w-100 h-100">Calcular</button>
+                    <button type="button" onclick="resetHoras()" id="resetar" name="resetar" class="btn btn-sm btn-secondary fw-bold w-100 h-100">Limpar</button>
+                  </div>
+                  <div class="col-md-5">
+                    <label for="hortip" class="fw-bold text-success">Horas Típicas:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="hortip"
+                      name="hortip"
+                      value="{{empenho.duracao_em_minutos_tipica}}"
+                      readonly>
+                  </div>
+                  <div class="col-md-5">
+                    <label for="horatip" class="fw-bold text-danger">Horas Atípicas:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="horatip"
+                      name="horatip"
+                      value="{{empenho.duracao_em_minutos_atipica}}"
+                      readonly>
+                  </div>
+                </div>
+              </div>
+              <div class="row align-items-top my-4">
+                <div class="col-xxl-12 col-md-12">
+                  <div class="line-container">
+                    <div class="line"></div>
+                    <span class="span-line">Selecionar Militares</span>
+                    <div class="line"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row form-dep py-0">
+                <div class="col-md-12 d-flex justify-content-center">
+                  <button 
+                  type="button" 
+                  class="btn btn-secondary my-3 comon-button"
+                  data-bs-toggle="modal" 
+                  data-bs-target="#modalInsertMilitar">
+                  Adicionar
+                </button>
+                </div>
+              </div>
+              <!--MODAL INSERE MILITAR INICIO -->
+              <div class="modal fade" id="modalInsertMilitar" tabindex="-1">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="ms-4 modal-title fw-bold text-uppercase text-center">
+                        Lista de Militares Disponíveis
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div id="alert" class="row form-dep py-0"></div>
+                      <table class="table table-sm table-dot w-100 text-center table-striped h-100" id="table-equip">
+                        <thead class="table-primary table-header">
+                          <tr>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Nome</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Numero</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">P/G</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Local</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Empenhos</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Hora Tip</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Hora Atip</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center"></th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody-esp" class="table-body">
+                          {% for militar in militares %}
+                          <tr>
+                            <td class="rot-info rot-sm">{{militar.nome}}</td>
+                            <td class="rot-info rot-sm">{{militar.numero}}</td>
+                            <td class="rot-info rot-sm">{{militar.postgrad|formatpostgrad}}</td>
+                            <td class="rot-info rot-sm">{{militar.local|formatlocal}}</td>
+                            <td class="rot-info rot-sm">{{militar.qtd_empenhos}}</td>
+                            <td class="rot-info rot-sm">{{militar.empenhos_minutos_tipica}}</td>
+                            <td class="rot-info rot-sm">{{militar.empenhos_minutos_atipica}}</td>
+                            <td class="rot-info rot-sm"><button type="button" class="btn btn-sm btn-danger fw-bold add-button" data-num="{{ militar.id }}">+</button></td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--MODAL INSERE MILITAR FINAL-->
+              <div class="row form-dep py-0">
+                <div class="col-md-12 py-2">
+                  <table class="table table-bordered border-secondary align-middle justify-content-center dobro-primeira-coluna table-striped" name="milTable" id="milTable">
+                    <thead class="table-dark">
+                      <tr>
+                          <th scope="col" class="rot-info rot-sm text-light d-flex justify-content-center largura-dobrada">Nome</th>
+                          <th scope="col" class="rot-info rot-sm text-light d-flex justify-content-center largura-normal">Numero</th>
+                          <th scope="col" class="rot-info rot-sm text-light d-flex justify-content-center largura-normal">P/G</th>
+                          <th scope="col" class="rot-info rot-sm text-light d-flex justify-content-center largura-normal">Local</th>
+                          <th scope="col" class="rot-info rot-sm text-light d-flex justify-content-center largura-normal">Empenhos</th>
+                          <th scope="col" class="rot-info rot-sm text-light d-flex justify-content-center largura-normal">Hora Tip</th>
+                          <th scope="col" class="rot-info rot-sm text-light d-flex justify-content-center largura-normal">Hora Atip</th>
+                          <th scope="col" class="rot-info rot-sm text-light d-flex justify-content-center largura-normal"></th>
+                      </tr>
+                  </thead>
+                  <tbody id="tbody-esp" class="table-body">
+                    {% for militar in empenho.militares.all %}
+                      <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-dobrada">{{militar.nome}}</td>
+                      <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">{{militar.numero}}</td>
+                      <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">{{militar.postgrad|formatpostgrad}}</td>
+                      <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">{{militar.local|formatlocal}}</td>
+                      <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">{{militar.qtd_empenhos}}</td>
+                      <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">{{militar.empenhos_minutos_atipica|minutos_para_horas}}</td>
+                      <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">{{militar.empenhos_minutos_tipica|minutos_para_horas}}</td>
+                      <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">
+                        <button class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button>
+                      </td>
+                      {% endfor %}
+                    </tbody>
+                </table>
+
+                </div>
+                <input type="hidden" name="emp_mil_data" id="emp_mil_data" value="">
+              </div>
+              <div class="row py-2 d-flex justify-content-center my-4">
+                <button class="btn btn-success w-50 fw-bold" type="submit">SALVAR EDIÇÃO</button>
+              </div>
+            </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Script do Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  function launchError(msg){
+    // inserir um texto de erro do tipo alert-danger no elemnto div de id = 'alert com um x para fechar o alert'
+    document.getElementById('alert').innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">\
+      <strong>Erro! </strong> ${msg}.\
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\
+    </div>`;
+    }
+
+    function launchError2(msg){
+      // inserir um texto de erro do tipo alert-danger no elemnto div de id = 'alert com um x para fechar o alert'
+      document.getElementById('alert2').innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">\
+        <strong>Erro! </strong> ${msg}.\
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\
+      </div>`;
+      }
+
+      function launchSuccess2(msg){
+        // inserir um texto de erro do tipo alert-danger no elemnto div de id = 'alert com um x para fechar o alert'
+        document.getElementById('alert2').innerHTML = `<div class="alert alert-success alert-dismissible fade show" role="alert">\
+          <strong>Ok! </strong> ${msg}.\
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>\
+        </div>`;
+        }
+// Seleciona todos os elementos com a classe 'datepicker'
+const datepickers = document.querySelectorAll(".datepicker");
+
+// Aplica o Flatpickr a cada elemento selecionado
+datepickers.forEach(function(input) {
+    flatpickr(input, {
+        enableTime: true,
+        dateFormat: "d/m/Y H:i",
+        time_24hr: true
+    });
+});
+
+
+function charger_hiddensei() {
+  // Pega o conteudo dentro do input hiddensei faz um split pelo caracter ; e guarda em um array
+  var hiddensei = document.getElementById("hiddensei").value.split(";");
+
+  const inputText = document.getElementById("inputText-new");
+  const listContainer = document.getElementById("listContainer-new");
+
+  // Verifica se o texto já existe na lista
+  if(hiddensei[0]){
+    for(let inn of hiddensei) {
+      // Cria um novo item da lista
+      let newItem = document.createElement("div");
+      newItem.classList.add(
+        "d-flex",
+        "flex-row",
+        "justify-content-between",
+        "w-100",
+        "align-items-center",
+        "mb-1"
+      );
+      newItem.innerHTML = `<p class="labelsei">${inn}</p> <button class="btn btn-success btn-sm me-2" onclick="removeItem(event)">X</button>`;
+  
+      // Adiciona o novo item à lista
+      listContainer.appendChild(newItem);
+    }
+  
+  }
+
+
+};
+
+  document
+  .getElementById("button-addon1-new")
+  .addEventListener("click", function () {
+    const inputText = document.getElementById("inputText-new");
+    const listContainer = document.getElementById("listContainer-new");
+
+    // Verifica se o texto já existe na lista
+    if (!listContainer.innerHTML.includes(inputText.value)) {
+      // Cria um novo item da lista
+      const newItem = document.createElement("div");
+      newItem.classList.add(
+        "d-flex",
+        "flex-row",
+        "justify-content-between",
+        "w-100",
+        "align-items-center",
+        "mb-1"
+      );
+      newItem.innerHTML = `<p class="labelsei">${inputText.value}</p> <button class="btn btn-success btn-sm me-2" onclick="removeItem(event)">X</button>`;
+
+      // Adiciona o novo item à lista
+      listContainer.appendChild(newItem);
+    }
+
+    // Limpa o campo de entrada
+    inputText.value = "";
+
+});
+
+function removeItem(event) {
+  const item = event.target.parentNode;
+  item.parentNode.removeChild(item);
+
+}
+// Função que será chamada sempre que um elemento for adicionado ou removido de "maincontent"
+// Seleciona o nó que será observado
+const targetNode = document.getElementById("listContainer-new");
+
+// Cria uma instância de observer
+const observer = new MutationObserver((mutationsList, observer) => {
+  // Itera sobre todas as mutações que acabaram de ocorrer
+  for (let mutation of mutationsList) {
+    // Se o `mutation.type` for `childList`, adiciona o conteúdo do elemento p ao input hidden
+    if (mutation.type === "childList") {
+      let textValues = "";
+      let childDivs = targetNode.children;
+      for (let i = 0; i < childDivs.length; i++) {
+        // Acessa o conteúdo do elemento p dentro da div
+        let pContent =
+          childDivs[i].getElementsByTagName("p")[0].textContent;
+        textValues += pContent + ";";
+      }
+
+      // Remove o último ';'
+      textValues = textValues.slice(0, -1);
+
+      // Armazena os valores no input hidden
+      document.getElementById("hiddensei").value = textValues;
+    }
+  }
+});
+
+// Configuração do observer: quais mutações serão observadas
+const config = { attributes: false, childList: true, subtree: false };
+// Inicia a observação do nó configurado
+observer.observe(targetNode, config);
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Reseta o formulario de id = 'form-etapas'
+  document.getElementById('form-etapas').reset();
+
+  document.querySelector('tbody').addEventListener('click', function(e) {
+    if(e.target && e.target.classList.contains('add-button')) {
+        militarget = e.target.getAttribute('data-num');
+        insereTableMil(militarget);
+    }
+});
+
+corrigeData();
+
+charger_hiddensei();
+  
+});
+
+function convertDateFormat(inputDate) {
+  if (inputDate.includes('T')){
+    let partes = inputDate.split('T')
+    data = partes[0].split('-');
+    data_f = `${data[2]}/${data[1]}/${data[0]}`;
+    hora = partes[1].split(':');
+    hora_f = `${hora[0]}:${hora[1]}`;
+    return `${data_f} às ${hora_f}`;
+  }
+
+  // Separa a data usando o hífen '-' como separador
+  const parts = inputDate.split('-');
+  
+  // Retorna a data no formato desejado
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+
+// Função ao clicar no botão adicionar militar  
+function insereTableMil(miltarget){
+
+  // Formatam os valores da Data/Hora Incial e Data/Hora Final para o formato dd/mm/yyyy
+  var datahorainicial = document.getElementById("datahorainicial").value
+  var datahorafinal = document.getElementById("datahorafinal").value
+
+  console.log(`Data Hora Incial: ${datahorainicial}`)
+  console.log(`Data Hora Final: ${datahorafinal}`)
+// Verifica se a datahorainicial ou datahorafinal é vazio, se for exibe um alert e retorna
+  if (datahorainicial == '' || datahorafinal == '') {
+    launchError("Data/Hora Inicial ou Data/Hora Final não pode ser vazio")
+    return;
+  }
+
+// Verifica se a data hora inicial é maior que a data hora final, se for exibe um alert e retorna
+  if (document.getElementById("datahorainicial").value > document.getElementById("datahorafinal").value) {
+    launchError("Data/Hora Inicial não pode ser maior que Data/Hora Final")
+    return;
+  }
+
+  // Faz split em datahorainicial e datahorafinal e pega a primera posição de cada uma e salva na variavel datainicial e datafinal
+  var datainicial = datahorainicial;
+  var datafinal = datahorafinal;
+
+
+  // faz uma requisição fetch para a url '/get_mil_data/' passando o id do militar selecionado. Tambem passar via get em url no formato ?datainicial=valor&datafinal=valor
+  fetch('/cadastros/get_mil_data/' + miltarget + '?datainicial=' + datainicial + '&datafinal=' + datafinal)
+  .then(response => response.json())
+  .then(militar => {
+    // Verificar se militar contém a chave error
+    console.log(`militar.error: ${militar.error}`)
+    if (militar.error) {
+      // Aqui, militar.error conterá o valor da chave "error"
+      if(militar.error == 'empfordate'){
+        launchError(`Existe empenho para o militar no período selecionado: <br> ${militar.empenho.nome}<br>Inicio: ${convertDateFormat(militar.empenho.datahorainicial)} - Fim: ${convertDateFormat(militar.empenho.datahorafinal)}`)
+        return;
+      } else if (militar.error == 'notfound') {
+        launchError("Militar não encontrado")
+        return;
+      } else if (militar.error == 'indfordate') {
+        mydatainicial = convertDateFormat(militar.indisponibilidade.datainicial);
+        mydatafinal = convertDateFormat(militar.indisponibilidade.datafinal);
+        launchError(`Existe indisponibilidadde para o militar no período: <br> ${militar.indisponibilidade.tipo} -> (${militar.indisponibilidade.descricao})<br>Inicio: ${mydatainicial} - Fim: ${mydatafinal}`)
+        return;
+      } else {
+        launchError("Erro desconhecido")
+        return;
+      }
+
+    } else {
+      // Recebe o objeto militar com os campos id, nome, postgrad, local, empenhos_em_minutos e qtd_empenhos e cria uma linha na tabela de id = 'milTable'
+      militar_full = militar.militar;
+      tabela = document.querySelector("#milTable > tbody")
+      var rows = tabela.rows;
+      console.log(`rows: ${rows.length}`)
+      console.log(`numero: ${militar_full.numero}`)
+      if(rows){
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          var cell = row.cells[1];
+          console.log(cell.textContent)
+          if (cell.textContent == militar_full.numero) {
+            alert("Empenho já adicionado para o militar");
+            return;
+          }
+        }
+      }
+      tabela.insertRow(-1).innerHTML = '<td class="text-center largura-dobrada"><input type="hidden" name="militar" value="' + militar_full.id + '">' + militar_full.nome + '</td><td class="text-center largura-normal">' + militar_full.numero + '</td><td class="text-center largura-normal">' + militar_full.postgrad + '</td><td class="text-center largura-normal">' + militar_full.local + '</td><td class="text-center largura-normal">' + militar_full.qtd_empenhos + '</td><td class="text-center largura-normal">' + militar_full.empenhos_minutos_tipica + '</td><td class="text-center largura-normal">' + militar_full.empenhos_minutos_atipica + '</td><td class="text-center largura-normal"><button class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button></td>';
+    }
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+  
+
+}
+
+function removeRow(elementoClicado) {
+  var tr = elementoClicado.parentNode.parentNode;
+  tr.parentNode.removeChild(tr);
+}
+
+function marcarTodosPg(){
+  var all_pg = document.getElementById("all_pg");
+  var checkboxes = all_pg.getElementsByTagName('input');
+  for (var i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].type == 'checkbox') {
+      checkboxes[i].checked = true;
+    }
+  }
+}
+function desmarcaTodosPg(){
+  var all_pg = document.getElementById("all_pg");
+  var checkboxes = all_pg.getElementsByTagName('input');
+  for (var i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].type == 'checkbox') {
+      checkboxes[i].checked = false;
+    }
+  }
+}
+
+function filtrarMils(){
+  // Recupera o valor do input de id = 'filter_emp'
+  var filter_emp = document.getElementById("filter_emp").value;
+
+  // Recupera todos os inputs do tipo checkbox que estão dentro de cada uma das div que estão dentro da div de id = all_checkpg
+  var checkboxes = document.querySelectorAll("#all_checkpg > div > input");
+
+  // Verifica quais checkbox estão marcados e salva em um array o nome do id desse checkbox substituindo o 'pg_' por ''
+  var pg_checked = [];
+  for (var i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked) {
+      pg_checked.push(checkboxes[i].id.replace('pg_', ''));
+    }
+  }
+  
+  // Verifica o select de id = miltarget e faz com que apenas fiquem visíveis as options que possuem o data-bs-pg igual a algum dos valores do array pg_checked
+  var miltarget = document.getElementById("miltarget");
+
+  // Reseta o valor do select
+  miltarget.value = 'Selecione o militar';
+
+  var options = miltarget.getElementsByTagName('option');
+  for (var i = 0; i < options.length; i++) {
+    if (pg_checked.includes(options[i].dataset.bsPg)) {
+      options[i].style.display = 'block';
+    } else {
+      options[i].style.display = 'none';
+    }
+  }
+
+  // Posteriormente deve fazer nova classificação do select de id miltarget de acordo com o valor do select de id = 'filter_emp'. Se o valor for MaxQE ele deve classificar do maior para o menor a quantidade de empenhos, se for MinQE deve classificar do menor para o maior a quantidade de empenhos, se for MaxQH deve classificar do maior para o menor a quantidade de horas e se for MinQH deve classificar do menor para o maior a quantidade de horas. O valor de empenho de cada option está no data-bs-emp e o valor de horas de cada option está no data-bs-hora. Dentro dessa classificação deve haver classificação por postgrad, ou seja, se tiver dois militares com a mesma quantidade de empenhos ou horas, o militar com o maior postgrad deve ficar acima do militar com o menor postgrad. a ordem de postgrad é: sd2cl, sd, cb, 3sgt, 2sgt, 1sgt, subten, 2ten, 1ten, cap, maj, tencel, cel
+  if (filter_emp == 'MaxQE') {
+    // Classifica do maior para o menor a quantidade de empenhos
+    var options = miltarget.getElementsByTagName('option');
+    var arr = [];
+    for (var i = 0; i < options.length; i++) {
+      arr.push(options[i]);
+    }
+    arr.sort(function(a, b) {
+      return b.dataset.bsEmp - a.dataset.bsEmp;
+    });
+    for (var i = 0; i < arr.length; i++) {
+      miltarget.appendChild(arr[i]);
+    }
+  } else if (filter_emp == 'MinQE') {
+    // Classifica do menor para o maior a quantidade de empenhos
+    var options = miltarget.getElementsByTagName('option');
+    var arr = [];
+    for (var i = 0; i < options.length; i++) {
+      arr.push(options[i]);
+    }
+    arr.sort(function(a, b) {
+      return a.dataset.bsEmp - b.dataset.bsEmp;
+    });
+    for (var i = 0; i < arr.length; i++) {
+      miltarget.appendChild(arr[i]);
+    }
+  } else if (filter_emp == 'MaxQH') {
+    // Classifica do maior para o menor a quantidade de horas
+    var options = miltarget.getElementsByTagName('option');
+    var arr = [];
+    for (var i = 0; i < options.length; i++) {
+      arr.push(options[i]);
+    }
+    arr.sort(function(a, b) {
+      return b.dataset.bsHora - a.dataset.bsHora;
+    });
+    for (var i = 0; i < arr.length; i++) {
+      miltarget.appendChild(arr[i]);
+    }
+  } else if (filter_emp == 'MinQH') {
+    // Classifica do menor para o maior a quantidade de horas
+    var options = miltarget.getElementsByTagName('option');
+    var arr = [];
+    for (var i = 0; i < options.length; i++) {
+      arr.push(options[i]);
+    }
+    arr.sort(function(a, b) {
+      return a.dataset.bsHora - b.dataset.bsHora;
+    });
+    for (var i = 0; i < arr.length; i++) {
+      miltarget.appendChild(arr[i]);
+    }
+  }
+
+}
+
+// Faz um preventdefault antes de enviar o form de id = 'form-etapas', pega em forma de array todos os elementos da segunda coluna da tabela de id = 'milTable' e salva em um array, depois percorre esse array e salva em um input hidden de id = 'emp_mil_data' o valor de cada elemento do array. Em seguida envia o form
+document.getElementById("form-etapas").addEventListener("submit", function(event){
+  event.preventDefault();
+  // Verifica se o campo de datas não estã vazio
+  if (document.getElementById("datahorainicial").value == '' || document.getElementById("datahorafinal").value == '') {
+    launchError("Data/Hora Inicial ou Data/Hora Final não pode ser vazio")
+    return;
+  }
+
+  var tabela = document.querySelector("#milTable > tbody");
+  var rows = tabela.rows;
+  var mils = [];
+  for (var i = 0; i < rows.length; i++) {
+    var row = rows[i];
+    var cell = row.cells[1];
+    mils.push(cell.textContent);
+  }
+
+  // Pega os valores nos inputs hortip e horatip a aplica a função hMParaMinutos
+  document.getElementById("hortip").value = hMParaMinutos(document.getElementById("hortip").value);
+  document.getElementById("horatip").value = hMParaMinutos(document.getElementById("horatip").value);
+
+  document.getElementById("emp_mil_data").value = mils;
+  document.getElementById("form-etapas").submit();
+});
+
+// Alimentando os dados para os campos de Horas Tipicas e Atipicas 
+document.getElementById('calcular').addEventListener('click', function () {
+  const datahorainicio = document.getElementById('datahorainicial').value;
+  const datahorafim = document.getElementById('datahorafinal').value;
+
+  fetch('/indisponibilidade/verificar_datas/', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: `datahorainicio=${datahorainicio}&datahorafim=${datahorafim}`
+  })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        if(data.erro == 'f_dat_inv'){
+          launchError2(`Formato de data e hora inválido`)
+          return;}
+          if(data.erro == 'datainitnot'){
+            launchError2(`A data e hora final deve ser maior que a data e hora inicial.`)
+            return;}
+          if(data.erro == 'errocomum'){
+            launchError2(`Erro durante a compilação dos dados`)
+            return;}
+          document.getElementById('hortip').value = minutosParaHM(data.minutos_tipicos);
+          document.getElementById('horatip').value = minutosParaHM(data.minutos_atipicos);
+
+          launchSuccess2(`Dados calculados com sucesso`)
+      })
+      .catch(error => {
+          console.error('Erro ao buscar os dados:', error);
+          alert('Ocorreu um erro. Por favor, tente novamente.');
+      });
+});
+
+function resetHoras(){
+  document.getElementById('hortip').value = '';
+  document.getElementById('horatip').value = '';
+  document.getElementById('datahorainicial').value = '';
+  document.getElementById('datahorafinal').value = '';
+}
+
+function corrigeData(){
+  const datahorainicio = document.getElementById('datahorainicial').value;
+  const datahorafim = document.getElementById('datahorafinal').value;
+
+  fetch('/indisponibilidade/verificar_datas/', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: `datahorainicio=${datahorainicio}&datahorafim=${datahorafim}`
+  })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        if(data.erro == 'f_dat_inv'){
+          launchError2(`Formato de data e hora inválido`)
+          return;}
+          if(data.erro == 'datainitnot'){
+            launchError2(`A data e hora final deve ser maior que a data e hora inicial.`)
+            return;}
+          if(data.erro == 'errocomum'){
+            launchError2(`Erro durante a compilação dos dados`)
+            return;}
+          document.getElementById('hortip').value = minutosParaHM(data.minutos_tipicos);
+          document.getElementById('horatip').value = minutosParaHM(data.minutos_atipicos);
+
+          launchSuccess2(`Dados calculados com sucesso`)
+      })
+      .catch(error => {
+          console.error('Erro ao buscar os dados:', error);
+          alert('Ocorreu um erro. Por favor, tente novamente.');
+      });
+}
+
+targetshour = document.querySelectorAll('.generate-hour');
+targetshour.forEach(element => {
+  element.addEventListener('change', function(){
+    toggleDisplay();
+    gerahoratipatip();
+  });
+});
+
+function gerahoratipatip() {
+  const zerahoras = () => {
+    document.getElementById('hortip').value = 0;
+    document.getElementById('horatip').value = 0;
+    
+  }
+  const datahorainicio = document.getElementById('datahorainicial').value;
+  const datahorafim = document.getElementById('datahorafinal').value;
+
+  if(!datahorainicio || !datahorafim) {
+    toggleDisplay();
+    return;
+  }
+
+  fetch('/indisponibilidade/verificar_datas/', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: `datahorainicio=${datahorainicio}&datahorafim=${datahorafim}`
+  })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        if(data.erro == 'f_dat_inv'){
+          launchError2(`Formato de data e hora inválido`)
+          zerahoras()
+          toggleDisplay();
+          return;}
+          if(data.erro == 'datainitnot'){
+            launchError2(`A data e hora final deve ser maior que a data e hora inicial.`)
+            zerahoras()
+            toggleDisplay();
+            return;}
+          if(data.erro == 'errocomum'){
+            launchError2(`Erro durante a compilação dos dados`)
+            zerahoras()
+            toggleDisplay();
+            return;}
+          document.getElementById('hortip').value = minutosParaHM(data.minutos_tipicos);
+          document.getElementById('horatip').value = minutosParaHM(data.minutos_atipicos);
+
+          toggleDisplay();
+
+          launchSuccess2(`Dados calculados com sucesso`)
+      })
+      .catch(error => {
+          console.error('Erro ao buscar os dados:', error);
+          alert('Ocorreu um erro. Por favor, tente novamente.');
+          toggleDisplay();
+          zerahoras()
+      });
+}
+
+function toggleDisplay() {
+  var contentLoader = document.querySelector('.content-loader');
+  var rowDiv = document.querySelector('#main-content');
+
+  // Verifica se a content-loader está visível
+  if (contentLoader.classList.contains('hidden')) {
+      // Esconde a row e mostra a content-loader
+      rowDiv.classList.add('hidden');
+      contentLoader.classList.remove('hidden');
+  } else {
+      // Esconde a content-loader e mostra a row
+      contentLoader.classList.add('hidden');
+      rowDiv.classList.remove('hidden');
+  }
+}
+
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% load static %} {% load filters %} {% block 'title'%}Home{% endblock %} {% block 'head' %}
+<link rel="stylesheet" href="{% static 'css/full-style.css' %}" />
+<style>
+    a.btn-main {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: bold;
+    
+    }
+    a.btn-main:hover {
+        background-color: #010b36;
+        color: white;
+    
+    }
+    p.main-p {
+        text-align: justify;
+        line-height: 2.5rem;
+        color: var(--primary-color);
+        font-size: 1rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    
+      }
+</style>
+{% endblock %} 
+{% block 'content' %}
+
+<div class="row align-items-top">
+  <!-- Fase Card -->
+  <div class="col-xxl-12 col-md-12">
+    <div class="card info-card revenue-card">
+      <div class="card-body">
+        <h5 class="card-title border-bottom">
+          SISTEMA DE CONTROLE DE EMPENHOS 
+          <span>| SECRETARIA - DIRETORIA DE LOGISTICA E FINANÇAS</span>
+        </h5>
+        <p class="main-p">O presente sistema tem o objetivo de realizar o controle dos empenhos dos militares da DLF, de forma a realizar de forma mais acertada escalas e empenhos necessários. Selecione a opção desejada abaixo:</p>
+        <p><span class="my-4"><i class="bi bi-circle-fill text-danger m-4"></i></span><b class="text-danger">Empenhos Atípicos:</b> Empenhos realizados fora do expediente administrativo</p>
+        <p><span class="my-4"><i class="bi bi-circle-fill text-success m-4"></i></span><b class="text-success">Empenhos Típicos:</b> Empenhos realizados dentro do expediente administrativo</p>
+        <div class="d-md-flex flex-row w-100 mt-4">
+            <a href="{% url 'cadastrar_militar' %}" class="btn btn-main btn-lg w-100 m-2">CADASTRAR MILITAR</a>
+            <a href="{% url 'registrar_empenho' %}" class="btn btn-main btn-lg w-100 m-2">LISTAR</a>
+            <a href="{% url 'registrar_indisp' %}" class="btn btn-main btn-lg w-100 m-2">REGISTRAR INDISPONIBILIDADE</a>
+        </div>
+        <div class="d-md-flex flex-row w-100 mt-4">
+          <a href="{% url 'cadastrar_empenho' %}" class="btn btn-main btn-lg w-100 m-2">CADASTRAR EMPENHO</a>
+          <a href="#" class="btn btn-main btn-lg w-100 m-2">TUTORIAIS (EM BREVE)</a>
+          <a href="{% url 'registrar_ferlib' %}" class="btn btn-main btn-lg w-100 m-2">REGISTRAR FERIADO/LIBERAÇÃO</a>
+      </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

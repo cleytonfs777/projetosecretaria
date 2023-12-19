@@ -1,0 +1,171 @@
+{% extends 'base.html' %} {% load static %} {% load filters %} {% block 'title'%}Cadastro de Feriado Liberação{% endblock %} {% block 'head' %}
+<link rel="stylesheet" href="{% static 'css/full-style.css' %}" />
+<!-- Estilo do Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+  .main-title-form {
+    font-size: 1.5em;
+    font-weight: bold;
+    background-color: #242424;
+    margin-bottom: 0.5em;
+    color: #bbbbbb;
+    width:100%;
+    text-align:center;
+    padding: 0.5em;
+  }
+  input[type="datetime-local"]::-webkit-datetime-edit-text { 
+    color: transparent; 
+  }
+
+</style>
+{% endblock %}{% block 'content' %}
+<div class="row align-items-top">
+  <!-- Fase Card -->
+  <div class="col-xxl-12 col-md-12">
+    <div class="card info-card revenue-card">
+      <div class="card-body">
+        <form id="form-regferlib" action="{% url 'registrar_ferlib' %}" method="POST">
+          {% csrf_token %}
+          <!-- Etapa 1 -->
+          <div class="form-etapa">
+            <div class="d-flex flex-row justify-content-center align-items-center">
+              <h3 class="main-title-form">CADASTRAR FERIADOS E LIBERAÇÕES</h3>
+            </div>
+            <div class="container">
+              <div class="row py-2">
+                <div class="col-md-12">
+                  <label for="nomeferlib" class="form-label text-secondary"
+                    >Nome</label
+                  >
+                  <input type="text" class="form-control" id="nomeferlib" name="nomeferlib" required>
+                </div>
+              </div>
+              <div class="row py-2">
+                <div class="col-md-12">
+                  <label for="descferlib" class="form-label text-secondary"
+                    >Descrição</label
+                  >
+                  <textarea
+                    class="form-control changeble-item"
+                    style="height: 130px; font-size: 0.8em"
+                    id="descferlib"
+                    name="descferlib"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="row py-2">
+                <div class="col-md-6">
+                  <label for="classferlib" class="form-label text-secondary"
+                    >Classe</label
+                  >
+                  <select
+                    class="form-select"
+                    aria-label="Default"
+                    id="classferlib"
+                    name="classferlib"
+                    required
+                  >
+                    <option selected disabled>Escolha a classe</option>
+                    <option value="feriado">Feriado</option>
+                    <option value="pontof">Ponto Facultativo</option>
+                    <option value="libaracao">Libaracao</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="dataferlib" class="form-label text-secondary"
+                    >Data</label
+                  >
+                  <input type="date" class="form-control datepicker date" id="dataferlib" name="dataferlib" required>
+                </div>
+              </div>
+              <div class="py-2 d-flex flex-row justify-content-start align-items-center">
+                <input type="checkbox" class="m-2" name="has_datahora" id="has_datahora">
+                <label for="has_datahora" class="m-2 fw-bold text-secondary">Especificar Apenas Data</label>
+              </div>
+              <div class="row py-2">
+                <div class="col-md-6">
+                  <label for="horainicial" class="form-label text-secondary"
+                    >Hora Inicial</label
+                  >
+                  <input type="time" class="form-control timepicker" id="horainicial" name="horainicial">
+                </div>
+                <div class="col-md-6">
+                  <label for="horafinal" class="form-label text-secondary"
+                    >Hora Final</label
+                  >
+                  <input type="time" class="form-control timepicker" id="horafinal" name="horafinal">
+                </div>
+              </div>
+              <div class="row py-2 d-flex justify-content-center my-4">
+                <button class="btn btn-secondary w-50 fw-bold" type="submit">CADASTRAR</button>
+              </div>
+            </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Script do Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+
+// Seleciona todos os elementos com a classe datepicker e a classe date
+const datepickersDate = document.querySelectorAll('.datepicker.date');
+
+// Seleciona todos os elementos com a classe timepicker
+const timepickers = document.querySelectorAll('.timepicker');
+
+
+// Inicializa os datepickers de date com o formato de data desejado
+datepickersDate.forEach(function(input) {
+    flatpickr(input, {
+        locale: 'pt',
+        enableTime: false,
+        dateFormat: "d/m/Y",
+    });
+});
+
+
+// Inicializa os timepickers com o formato de hora desejado
+timepickers.forEach(function(input) {
+    flatpickr(input, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true, // para formato de 24 horas
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+            
+  // Seleciona o checkbox e os inputs de data
+  let has_datahora = document.getElementById('has_datahora');
+  let horainicial = document.getElementById('horainicial');
+  let horafinal = document.getElementById('horafinal');
+  
+  // Adiciona um listener ao checkbox para detectar mudanças
+  has_datahora.addEventListener('change', function () {
+      
+      // Se o checkbox está checked
+      if (this.checked) {
+          // Desabilita os inputs de data e limpa os valores
+          horainicial.disabled = true;
+          horafinal.disabled = true;
+          // Insere os horarios de 00:00 e 23:59 com horario valido
+          horainicial.value = '00:00';
+          horafinal.value = '23:59';
+      } else {
+          // Habilita os inputs de data
+          horainicial.disabled = false;
+          horafinal.disabled = false;
+      }
+      
+  });
+  
+});
+
+</script>
+
+{% endblock %}

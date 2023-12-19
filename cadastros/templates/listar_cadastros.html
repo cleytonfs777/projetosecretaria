@@ -1,0 +1,172 @@
+{% extends 'base.html' %} {% load static %} {% load filters %} {% block 'title'%}Lista de Registros{% endblock %} {% block 'head' %}
+<link rel="stylesheet" href="{% static 'css/full-style.css' %}" />
+<style>
+  label.form-label {
+    color: #012970 !important;
+  }
+  th.ocultar,
+  td.ocultar {
+    display: none;
+  }
+  .table-dot tbody {
+    display: block; /* Permite que o tbody seja rolável */
+    max-height: 10em; /* Define a altura máxima */
+    overflow-y: auto; /* Permite a rolagem vertical quando necessário */
+  }
+
+  .table-dot thead,
+  .table-dot tbody tr {
+    display: table; /* Faz com que o thead e tr se comportem como uma tabela */
+    width: 100%; /* Faz com que o thead e tr ocupem a largura total da tabela */
+    table-layout: fixed; /* Garante que as células da tabela sejam de largura igual */
+  }
+
+  /* Estilo personalizado para os elementos <td> */
+  .table-dot td {
+    color: #012970; /* Cor de texto azul escuro */
+    font-size: 0.8em; /* Tamanho de fonte menor */
+    padding: 5px; /* Espaçamento interno, ajuste conforme necessário */
+  }
+
+  .modal-custom {
+    max-width: 50%; /* Ou o valor que você quiser */
+  }
+</style>
+
+{% endblock %}{% block 'content' %}
+{% if messages %} {% for message in messages %}
+<div class="alert {{message.tags}} stilo-message">{{message}}</div>
+{% endfor %} {% endif %}
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">
+      LISTA DE RECURSOS
+      <span>| Selecione abaixo o recurso que deseja visualizar</span>
+    </h5>
+
+    <!-- Default Tabs -->
+    <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
+      <li class="nav-item flex-fill" role="presentation">
+        <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab" aria-controls="home" aria-selected="true">Militares</button>
+      </li>
+      <li class="nav-item flex-fill" role="presentation">
+        <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab" aria-controls="profile" aria-selected="false">Recursos</button>
+      </li>
+
+    </ul>
+    <div class="tab-content pt-2" id="myTabjustifiedContent">
+      <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row align-items-top">
+          <div class="col-xxl-12 col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <!-- Tabela de Militares -->
+                <table id="main-table_edit" class="table table-striped table-sm table-dot datatable">
+                  <thead>
+                      <tr>
+                          <th scope="col" class="rot-info rot-sm">Nome</th>
+                          <th scope="col" class="rot-info rot-sm">Nº</th>
+                          <th scope="col" class="rot-info rot-sm">Post/Grad</th>
+                          <th scope="col" class="rot-info rot-sm">Local</th>
+                          <th scope="col" class="rot-info rot-sm">Qtd Escalas</th>
+                          <th scope="col" class="rot-info rot-sm">Horas Empenho</th>
+                          <th scope="col" class="rot-info rot-sm"></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for militar in militares %}
+                      <tr>
+                          <td class="rot-info rot-sm">{{militar.nome}}</td>
+                          <td class="rot-info rot-sm">{{militar.numero}}</td>
+                          <td class="rot-info rot-sm">{{militar.postgrad|formatpostgrad}}</td>
+                          <td class="rot-info rot-sm">{{militar.local|formatlocal}}</td>
+                          <td class="rot-info rot-sm d-flex justify-content-center">{{militar.qtd_empenhos}}</td>
+                          <td class="rot-info rot-sm d-flex justify-content-center">{{militar.empenhos_em_minutos}}</td>
+                          <td>
+                            <!-- Botão para apagar um registro-->
+                            <button 
+                            type="button" 
+                            class="btn btn-danger btn-sm" 
+                            >
+                            <i class="ri-delete-bin-6-line"></i></button>                   
+                            <!-- Botão para editar um registro-->
+                            <button 
+                            type="button" 
+                            class="btn btn-primary btn-sm"> 
+                            <i class="ri-edit-box-line"></i></button>    
+                            <button 
+                            type="button" 
+                            class="btn btn-success btn-sm"> 
+                            <i class="bi bi-eye"></i></button>  
+                          </td>             
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              
+                <!-- End Table with stripped rows -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="row align-items-top">
+          <div class="col-xxl-12 col-md-12"> 
+            <div class="card">
+              <div class="card-body">
+                <!-- Tabela de Equipamentos -->
+                <table
+                  id="main-table_edit"
+                  class="table table-striped table-sm table-dot"
+                >
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col" class="rot-info rot-sm">Nome</th>
+                      <th scope="col" class="rot-info rot-sm">Tipo</th>
+                      <th scope="col" class="rot-info rot-sm">D/H Inicial</th>
+                      <th scope="col" class="rot-info rot-sm">D/H Final</th>
+                      <th scope="col" class="rot-info rot-sm"></th>
+                  </thead>
+                  <tbody>
+                    {% for empenho in empenhos %}
+                    <tr>
+                      <td  class="rot-info rot-sm">{{empenho.nome}}</td>
+                      <td  class="rot-info rot-sm">{{empenho.tipo}}</td>
+                      <td  class="rot-info rot-sm">{{empenho.datahorainicial|formatdatetime}}</td>
+                      <td  class="rot-info rot-sm">{{empenho.datahorafinal|formatdatetime}}</td>
+                      <td>
+                        <!-- Botão para apagar um registro-->
+                        <button 
+                        type="button" 
+                        class="btn btn-danger btn-sm" 
+                        >
+                        <i class="ri-delete-bin-6-line"></i></button>                   
+                        <!-- Botão para editar um registro-->
+                        <button 
+                        type="button" 
+                        class="btn btn-primary btn-sm"> 
+                        <i class="ri-edit-box-line"></i></button>    
+                        <button 
+                        type="button" 
+                        class="btn btn-success btn-sm"> 
+                        <i class="bi bi-eye"></i></button>  
+                      </td>               
+                    </tr>                    
+                    
+                    
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- End Default Tabs -->
+
+  </div>
+</div>
+{% endblock %}
