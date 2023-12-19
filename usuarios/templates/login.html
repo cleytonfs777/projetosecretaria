@@ -27,7 +27,7 @@
       {% endif %}
     <div class="login-container">
       <div class="logo">
-        <img src="{% static '/img/logo.png' %}" alt="Logo" width="250">
+        <img src="{% static 'img/logo.png' %}" alt="Logo" width="250">
       </div>
       <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
