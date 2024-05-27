@@ -1,4 +1,7 @@
 from django.db import models
+import random
+from faker import Faker
+# Substitua 'myapp' pelo nome do seu aplicativo
 
 postgrad_choices = (
     ('sd2cl', 'Sd 2ª Classe BM'),
@@ -32,7 +35,7 @@ local_choices = (
     ('sdal3', 'SDAL-3'),
     ('sdal4', 'SDAL-4'),
     ('secretaria', 'Secretaria'),
-    )
+)
 
 tipo_choices = (
     ('escala', 'Escala'),
@@ -41,13 +44,13 @@ tipo_choices = (
 )
 
 
-
-
 class Militar(models.Model):
     numero = models.CharField(max_length=100, blank=True, null=True)
     nome = models.CharField(max_length=100)
-    postgrad = models.CharField(max_length=10, choices=postgrad_choices, blank=True, null=True)
-    local = models.CharField(max_length=10, choices=local_choices, blank=True, null=True)
+    postgrad = models.CharField(
+        max_length=10, choices=postgrad_choices, blank=True, null=True)
+    local = models.CharField(
+        max_length=10, choices=local_choices, blank=True, null=True)
     qtd_empenhos = models.IntegerField(blank=True, null=True)
     empenhos_minutos_atipica = models.IntegerField(blank=True, null=True)
     empenhos_minutos_tipica = models.IntegerField(blank=True, null=True)
@@ -56,9 +59,11 @@ class Militar(models.Model):
 
     def __str__(self):
         return f"{self.postgrad} {self.nome}"
-    
+
+
 class Empenho(models.Model):
-    tipo = models.CharField(max_length=10, choices=tipo_choices, blank=True, null=True)
+    tipo = models.CharField(
+        max_length=10, choices=tipo_choices, blank=True, null=True)
     nome = models.CharField(max_length=100)
     datahorainicial = models.DateTimeField(blank=True, null=True)
     datahorafinal = models.DateTimeField(blank=True, null=True)
@@ -69,4 +74,3 @@ class Empenho(models.Model):
 
     def __str__(self):
         return self.nome
-

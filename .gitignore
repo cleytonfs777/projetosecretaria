@@ -163,3 +163,4 @@ cython_debug/
 militares.json
 militares_org.py
 sync_mil.py
+populate_militar.py

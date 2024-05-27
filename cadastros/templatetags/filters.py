@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django import template
 from django.db.models import Case, FloatField, Sum, When
 from ..models import Empenho, Militar
@@ -54,19 +55,24 @@ MAP_MONTHS = {
     12: 'Dezembro'
 }
 
+
 @register.filter(name="formatdatetime")
 def formatdatetime(value):
     if value:
+        # Formatar data e hora com timezone
+        value -= timedelta(hours=3)
         return value.strftime("%d/%m/%Y %H:%M")
     else:
         return None
-    
+
+
 @register.filter(name="formattime")
 def formattime(value):
     if value:
         return value.strftime("%H:%M")
     else:
         return "---"
+
 
 @register.filter(name="formatinfo")
 def formatinfo(value):
@@ -75,6 +81,7 @@ def formatinfo(value):
     else:
         return "Não há"
 
+
 @register.filter(name="formatdate")
 def formatdate(value):
     if value:
@@ -82,18 +89,21 @@ def formatdate(value):
     else:
         return None
 
+
 @register.filter(name="listranfpostgrad")
 def listranfpostgrad(lista):
     return [MAP_VALUES.get(item, item) for item in lista]
 
+
 @register.filter(name="formatpostgrad")
 def formatpostgrad(value):
     return MAP_VALUES.get(value, value)
-    
+
+
 @register.filter(name="formatlocal")
 def formatlocal(value):
     return MAP_LOCALS.get(value, value)
-    
+
 
 @register.filter(name="empenhos_por_militar")
 def empenhos_por_militar(militar_id):
@@ -103,6 +113,7 @@ def empenhos_por_militar(militar_id):
     except Militar.DoesNotExist:
         return []
 
+
 @register.filter(name="militares_por_empenho")
 def militares_por_empenho(empenho_id):
     try:
@@ -110,10 +121,12 @@ def militares_por_empenho(empenho_id):
         return empenho.militares.all()
     except Empenho.DoesNotExist:
         return []
-    
+
+
 @register.filter(name="getyear")
 def getyear(value):
     return value.strftime("%Y")
+
 
 @register.filter(name="mestexto")
 def mestexto(value):

@@ -29,83 +29,106 @@
   }
   .modal-custom {
     max-width: 80%; /* ou o valor que preferir */
-}
+  }
 
-table#InsertMilEmp th {
-  font-size: 0.2em;
-  text-align: center;
-  color: red;
-}
-.minha-tabela {
-  min-width: 680px;
+  table#InsertMilEmp th {
+    font-size: 0.2em;
+    text-align: center;
+    color: red;
+  }
+  .minha-tabela {
+    min-width: 680px;
+    overflow-x: auto;
+  }
+  .table-wrapper {
   overflow-x: auto;
-}
-.table-wrapper {
-overflow-x: auto;
-}
-.largura-dobrada {
-  width: 40%!important;
-}
-
-.largura-normal {
-  width: 10%!important;
-}
-label.form-label {
-  color: #012970 !important;
-}
-th.ocultar,
-td.ocultar {
-  display: none;
-}
-.table-dot tbody {
-  display: block; /* Permite que o tbody seja rolável */
-  max-height: 20em; /* Define a altura máxima */
-  overflow-y: auto; /* Permite a rolagem vertical quando necessário */
-}
-
-.table-dot thead,
-.table-dot tbody tr {
-  display: table; /* Faz com que o thead e tr se comportem como uma tabela */
-  width: 100%; /* Faz com que o thead e tr ocupem a largura total da tabela */
-  table-layout: fixed; /* Garante que as células da tabela sejam de largura igual */
-}
-
-/* Estilo personalizado para os elementos <td> */
-.table-dot td {
-  color: #012970; /* Cor de texto azul escuro */
-  font-size: 0.8em; /* Tamanho de fonte menor */
-  padding: 5px; /* Espaçamento interno, ajuste conforme necessário */
-}
-
-.modal-custom {
-  max-width: 50%; /* Ou o valor que você quiser */
-}
-/* Faz com que as duas primeiras células do cabeçalho sejam mais largas */
-.dobro-segunda-coluna th:nth-child(1),
-.dobro-segunda-coluna th:nth-child(2) {
+  }
+  .largura-dobrada {
     width: 40%!important;
-}
+  }
 
-/* Define a largura das outras células do cabeçalho, excluindo as duas primeiras */
-.dobro-segunda-coluna th:not(:nth-child(1)):not(:nth-child(2)) {
-    width: 20%!important;
-}
+  .largura-normal {
+    width: 10%!important;
+  }
+  label.form-label {
+    color: #012970 !important;
+  }
+  th.ocultar,
+  td.ocultar {
+    display: none;
+  }
+  .table-dot tbody {
+    display: block; /* Permite que o tbody seja rolável */
+    max-height: 20em; /* Define a altura máxima */
+    overflow-y: auto; /* Permite a rolagem vertical quando necessário */
+  }
 
-/* Faz com que as duas primeiras colunas sejam mais largas */
-.dobro-segunda-coluna td:nth-child(1),
-.dobro-segunda-coluna td:nth-child(2) {
-    width: 40%;  /* Ajuste esse valor conforme desejar */
-}
+  .table-dot thead,
+  .table-dot tbody tr {
+    display: table; /* Faz com que o thead e tr se comportem como uma tabela */
+    width: 100%; /* Faz com que o thead e tr ocupem a largura total da tabela */
+    table-layout: fixed; /* Garante que as células da tabela sejam de largura igual */
+  }
 
-/* Define a largura das outras colunas, excluindo as duas primeiras */
-.dobro-segunda-coluna td:not(:nth-child(1)):not(:nth-child(2)) {
-    width: 20%;  /* Ajuste esse valor conforme desejar */
-}
+  /* Estilo personalizado para os elementos <td> */
+  .table-dot td {
+    color: #012970; /* Cor de texto azul escuro */
+    font-size: 0.8em; /* Tamanho de fonte menor */
+    padding: 5px; /* Espaçamento interno, ajuste conforme necessário */
+  }
 
-.ocultar {
-    display: none!important; 
-}
+  .modal-custom {
+    max-width: 50%; /* Ou o valor que você quiser */
+  }
+  /* Faz com que as duas primeiras células do cabeçalho sejam mais largas */
+  .dobro-segunda-coluna th:nth-child(1),
+  .dobro-segunda-coluna th:nth-child(2) {
+      width: 40%!important;
+  }
 
+  /* Define a largura das outras células do cabeçalho, excluindo as duas primeiras */
+  .dobro-segunda-coluna th:not(:nth-child(1)):not(:nth-child(2)) {
+      width: 20%!important;
+  }
+
+  /* Faz com que as duas primeiras colunas sejam mais largas */
+  .dobro-segunda-coluna td:nth-child(1),
+  .dobro-segunda-coluna td:nth-child(2) {
+      width: 40%;  /* Ajuste esse valor conforme desejar */
+  }
+
+  /* Define a largura das outras colunas, excluindo as duas primeiras */
+  .dobro-segunda-coluna td:not(:nth-child(1)):not(:nth-child(2)) {
+      width: 20%;  /* Ajuste esse valor conforme desejar */
+  }
+
+  .ocultar {
+      display: none!important; 
+  }
+
+  .label-main {
+    color: #ffffff !important;
+    font-weight: 900;
+  }
+  .bg-primary-ligth {
+    background-color: #9BE4FA;
+  }
+
+  .bg-dark-ligth {
+    background-color: #ACACAC;
+  }
+
+  .bg-success-ligth {
+    background-color: #D0FFCD;
+  }
+
+  .bg-danger-ligth {
+    background-color: #FFACAC;
+  }
+
+  .bg-warning-ligth {
+    background-color: #FAF3D3;
+  }
 
 </style>
 {% endblock %}{% block 'content' %}
@@ -287,13 +310,24 @@ td.ocultar {
                 </div>
               </div>
               <div class="row form-dep py-0">
-                <div class="col-md-12 d-flex justify-content-center">
+
+                <div class="col-md-6 d-flex justify-content-center">
                   <button 
                   type="button" 
-                  class="btn btn-secondary my-3 comon-button"
+                  class="btn btn-outline-primary btn-lg m-3"
+                  data-bs-toggle="modal" 
+                  data-bs-target="#modalAutoGenerate">
+                  <i class="bi bi-magic me-3"></i>
+                  Gerador Automatico
+                </button>
+                </div>
+                <div class="col-md-6 d-flex justify-content-center">
+                  <button 
+                  type="button" 
+                  class="btn btn-outline-primary btn-lg m-3"
                   data-bs-toggle="modal" 
                   data-bs-target="#modalInsertMilitar">
-                  Adicionar
+                  Adicionar manual
                 </button>
                 </div>
               </div>
@@ -347,6 +381,537 @@ td.ocultar {
                 </div>
               </div>
               <!--MODAL INSERE MILITAR FINAL-->
+              <!--MODAL AUTO GERADOR INICIO -->
+              <div class="modal fade" id="modalAutoGenerate" tabindex="-1">
+                <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="ms-4 modal-title fw-bold text-uppercase text-center">
+                        Gerador Automático de Escalas - Multicritérios
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div id="alert" class="row form-dep py-0"></div>
+                      <div>
+                        <div class="row py-2 mb-5">
+                          <div class="col-md-9 d-flex flex-row justify-content-center align-items-center">
+                            <h5 class="form-label fw-bolder text-primary text-center">Quantos militares pretende inserir em sua escala?</h5>
+                            <input
+                              style="width: 5.5rem;"
+                              type="number"
+                              class="form-control ms-3"
+                              id="quantmil"
+                              name="quantmil"                   
+                              placeholder=""
+                              required
+                            />
+                          </div>
+                          <div class="col-md-3 d-flex flex-row justify-content-center align-items-center">
+                            <button class="btn btn-secondary" onclick="resetSelectsToDefault()">Limpar Seleções</button>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-2 py-2 d-flex flex-row justify-content-center align-items-center fw-bolder text-primary text-center">
+                            CRITÉRIOS
+                          </div>
+                          <div class="col-md-2 bg-primary">
+                            <label class="mb-2 label-main" for="crit1">Criério 1</label>
+                            <select
+                            
+                            class="form-select mb-2 select-target"
+                            aria-label="Default"
+                            id="crit1"
+                            name="crit1"
+                            required
+                          >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Emp</option>
+                            <option value="num_hti">Nº H Típ</option>
+                            <option value="num_hat">Nº H Atíp</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 bg-success">
+                            <label class="mb-2 label-main" for="crit2">Criério 2</label>
+                            <select
+                            
+                            class="form-select mb-2 select-target"
+                            aria-label="Default"
+                            id="crit2"
+                            name="crit2"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Emp</option>
+                            <option value="num_hti">Nº H Típ</option>
+                            <option value="num_hat">Nº H Atíp</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 bg-danger">
+                            <label class="mb-2 label-main" for="crit3">Criério 3</label>
+                            <select
+                            
+                            class="form-select mb-2 select-target"
+                            aria-label="Default"
+                            id="crit3"
+                            name="crit3"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Emp</option>
+                            <option value="num_hti">Nº H Típ</option>
+                            <option value="num_hat">Nº H Atíp</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 bg-warning">
+                            <label class="mb-2 label-main" for="crit4">Criério 4</label>
+                            <select
+                            
+                            class="form-select mb-2 select-target"
+                            aria-label="Default"
+                            id="crit4"
+                            name="crit4"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Emp</option>
+                            <option value="num_hti">Nº H Típ</option>
+                            <option value="num_hat">Nº H Atíp</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 bg-dark">
+                            <label class="mb-2 label-main" for="crit5">Criério 5</label>
+                            <select
+                            
+                            class="form-select mb-2 select-target"
+                            aria-label="Default"
+                            id="crit5"
+                            name="crit5"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Emp</option>
+                            <option value="num_hti">Nº H Típ</option>
+                            <option value="num_hat">Nº H Atíp</option>
+                          </select>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class=" py-2 col-md-2 d-flex flex-row justify-content-center align-items-center fw-bolder text-primary text-center">
+                            PRIORIDADE 1
+                          </div>
+                          <div class="col-md-2 bg-primary-ligth  py-2">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri1crit1"
+                            name="pri1crit1"
+                            required
+                          >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 bg-success-ligth py-2 ">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri1crit2"
+                            name="pri1crit2"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 bg-danger-ligth py-2 ">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri1crit3"
+                            name="pri1crit3"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 bg-warning-ligth py-2 ">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri1crit4"
+                            name="pri1crit4"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-dark-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri1crit5"
+                            name="pri1crit5"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class=" py-2 col-md-2 d-flex flex-row justify-content-center align-items-center fw-bolder text-primary text-center">
+                            PRIORIDADE 2
+                          </div>
+                          <div class="col-md-2 py-2 bg-primary-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri2crit1"
+                            name="pri2crit1"
+                            required
+                          >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-success-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri2crit2"
+                            name="pri2crit2"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-danger-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri2crit3"
+                            name="pri2crit3"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-warning-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri2crit4"
+                            name="pri2crit4"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-dark-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri2crit5"
+                            name="pri2crit5"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class=" py-2 col-md-2 d-flex flex-row justify-content-center align-items-center fw-bolder text-primary text-center">
+                            PRIORIDADE 3
+                          </div>
+                          <div class=" py-2 col-md-2 bg-primary-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri3crit1"
+                            name="pri3crit1"
+                            required
+                          >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-success-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri3crit2"
+                            name="pri3crit2"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-danger-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri3crit3"
+                            name="pri3crit3"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-warning-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri3crit4"
+                            name="pri3crit4"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-dark-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri3crit5"
+                            name="pri3crit5"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class=" py-2 col-md-2 d-flex flex-row justify-content-center align-items-center fw-bolder text-primary text-center">
+                            PRIORIDADE 4
+                          </div>
+                          <div class="col-md-2 py-2 bg-primary-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri4crit1"
+                            name="pri4crit1"
+                            required
+                          >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-success-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri4crit2"
+                            name="pri4crit2"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-danger-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri4crit3"
+                            name="pri4crit3"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-warning-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri4crit4"
+                            name="pri4crit4"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                          <div class="col-md-2 py-2 bg-dark-ligth">
+                            <select
+                            
+                            class="form-select"
+                            aria-label="Default"
+                            id="pri4crit5"
+                            name="pri4crit5"
+                            required
+                            >
+                            <option selected value="nenhum_pg">Nenhum</option>
+                            <option value="pg">Post/Grad</option>
+                            <option value="loc">Local</option>
+                            <option value="num_emp">Nº Empenhos</option>
+                            <option value="num_hti">Nº Horas Típicas</option>
+                            <option value="num_hat">Nº Horas Atípicas</option>
+                          </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row d-flex mt-5 justify-content-center">
+                        <button type="button" class="btn btn-primary btn-lg m-3 p-3 w-75 fw-bold" id="btn-gerar-escala" onclick="generateAutomaticScale()">
+                          <i class="bi bi-gear-wide-connected"></i>
+                          GERAR ESCALA DE EMPENHO
+                        </button>
+                      </div>
+                      <hr>
+                      <table class="table table-sm table-dot w-100 text-center table-striped h-100 datatable" id="table-equip">
+                        <thead class="table-primary table-header">
+                          <tr>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Nome</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Numero</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">P/G</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Local</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Empenhos</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Hora Tip</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Hora Atip</th>
+                            <th scope="col" class="rot-info rot-sm d-flex justify-content-center"></th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody-esp" class="table-body">
+                          {% for militar in militares %}
+                          <tr>
+                            <td class="rot-info rot-sm">{{militar.nome}}</td>
+                            <td class="rot-info rot-sm">{{militar.numero}}</td>
+                            <td class="rot-info rot-sm">{{militar.postgrad|formatpostgrad}}</td>
+                            <td class="rot-info rot-sm">{{militar.local|formatlocal}}</td>
+                            <td class="rot-info rot-sm">{{militar.qtd_empenhos}}</td>
+                            <td class="rot-info rot-sm">{{militar.empenhos_minutos_tipica|minutos_para_horas}}</td>
+                            <td class="rot-info rot-sm">{{militar.empenhos_minutos_atipica|minutos_para_horas}}</td>
+                            <td class="rot-info rot-sm"><button type="button" class="btn btn-sm btn-danger fw-bold add-button" data-num="{{ militar.id }}">+</button></td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--MODAL AUTO GERADOR FINAL-->
               <div class="row form-dep py-0">
                 <div class="col-md-12 py-2">
                   <table class="table table-bordered border-secondary align-middle justify-content-center dobro-primeira-coluna table-striped" name="milTable" id="milTable">
@@ -382,6 +947,8 @@ td.ocultar {
 </div>
 <!-- Script do Flatpickr -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<!-- Injeta todas as categorias do JS -->
+<script src="{% static 'js/categorias.js' %}"></script>
 <script>
   function launchError(msg){
     // inserir um texto de erro do tipo alert-danger no elemnto div de id = 'alert com um x para fechar o alert'
@@ -480,6 +1047,29 @@ const observer = new MutationObserver((mutationsList, observer) => {
   }
 });
 
+function handleSelectChange() {
+  let critNumber = this.id.replace('crit', ''); // Extrai o número do critério baseado no id, ex: '1' de 'crit1'
+  let selectedCategory = this.value; // Valor selecionado, ex: 'pg', 'loc'
+
+  // Limpar os selects relacionados
+  for (let i = 1; i <= 4; i++) {
+    let selectId = `pri${i}crit${critNumber}`;
+    let selectElement = document.getElementById(selectId);
+    selectElement.innerHTML = ''; // Limpa as opções existentes
+
+    // Adiciona novas opções baseadas no valor selecionado
+    if (categorias[selectedCategory]) {
+      categorias[selectedCategory].forEach(option => {
+        let newOption = document.createElement('option');
+        newOption.value = option[0];
+        newOption.textContent = option[1];
+        selectElement.appendChild(newOption);
+      });
+    }
+  }
+}
+
+
 // Configuração do observer: quais mutações serão observadas
 const config = { attributes: false, childList: true, subtree: false };
 // Inicia a observação do nó configurado
@@ -495,6 +1085,11 @@ document.addEventListener('DOMContentLoaded', function() {
         insereTableMil(militarget);
     }
 });
+
+var selects = document.querySelectorAll('.select-target'); // Seleciona todos os elementos <select>
+  selects.forEach(function(select) {
+    select.addEventListener('change', handleSelectChange);
+  });
   
 });
 
@@ -851,6 +1446,94 @@ function toggleDisplay() {
   }
 }
 
+function resetSelectsToDefault() {
+  // Seleciona todos os elementos <select> na página
+  var selects = document.querySelectorAll('select');
+
+  // Itera sobre cada <select> e reseta para o valor padrão
+  selects.forEach(function(select) {
+      if (select.options.length > 0) {
+          select.value = select.options[0].value;  // Define o valor como o primeiro da lista
+      }
+  });
+}
+
+function generateAutomaticScale() {
+  let all_objects = [];
+  let quantmil = document.getElementById("quantmil").value; // Assume que quantmil é usado em algum lugar não mostrado no código
+
+  const datahorainicio = document.getElementById('datahorainicial').value;
+  const datahorafim = document.getElementById('datahorafinal').value;
+
+  if(!datahorainicio || !datahorafim) {
+    alert("É obrigatório o preenchimento de data inicial e final...")
+    return;
+  }
+  
+
+  // Iterar sobre os 5 critérios
+  for (let i = 1; i <= 5; i++) {
+    let firstcrit = document.getElementById(`crit${i}`).value;
+
+    for (let item of all_objects) {
+      if (firstcrit in item) {
+        alert(`Critério ${firstcrit} já existe. Por favor, escolha outro.`);
+        return; // Para o loop e a função inteira
+      }
+    }
+
+
+
+    if (firstcrit !== "noone" && firstcrit !== "nenhum_pg") {
+      let obj = {}; // Inicializa obj aqui, pois só será usado se passar pelo if acima
+      obj[firstcrit] = []; // Cria um array na chave 'firstcrit'
+
+      // Iterar sobre os 4 miliciais
+      for (let j = 1; j <= 4; j++) {
+        let firtcritpri = document.getElementById(`pri${j}crit${i}`).value;
+
+        if (firtcritpri !== "noone" && firtcritpri !== "nenhum_pg") {
+          
+          if (!obj[firstcrit].includes(firtcritpri)) {
+            obj[firstcrit].push(firtcritpri);
+          } else {
+            alert(`Existem critérios repetidos. Por favor, corrija.`);
+            return;
+          }
+        }
+      }
+
+      if (obj[firstcrit].length > 0) {
+        all_objects.push(obj);
+      }
+    }
+  }
+
+  if (quantmil < 1) {
+    alert("Quantidade de militares inválido. Por favor, corrija.");
+    return;
+  }
+
+  data_hora_all = {"data_hora_all": [datahorainicio, datahorafim]};
+  all_objects.push(data_hora_all);
+
+  console.log(all_objects);
+  fetch('/cadastros/listar_automate_empenho/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: JSON.stringify(all_objects)
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.error('Erro:', error);
+    });
+}
 
 </script>
 {% endblock %}

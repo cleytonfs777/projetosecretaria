@@ -1,0 +1,31 @@
+version: "3.1"
+services:
+  postgresql:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 142924d0
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  # djangoapp:
+  #   build: .
+  #   restart: always
+  #   environment:
+  #     - DEBUG=1
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - postgresql
+  #   volumes:
+  #     - .:/app
+  #   env_file:
+  #     - .env
+  #   command: ["./wait-for-it.sh", "postgresql:5432", "--", "bash", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+
+
+
+volumes:
+  postgres_data:

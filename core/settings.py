@@ -57,7 +57,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
-CSRF_TRUSTED_ORIGINS = ['https://django-server-production-53fa.up.railway.app', 'https://gestaomilitar.site', 'https://www.gestaomilitar.site']
+CSRF_TRUSTED_ORIGINS = ['https://django-server-production-53fa.up.railway.app', 'https://gestaomilitar.site', 'https://www.gestaomilitar.site', 'http://localhost:8000']
 
 CSRF_COOKIE_SECURE = True
 
@@ -91,11 +91,11 @@ AUTH_USER_MODEL = 'usuarios.Usuario'
 DATABASES = {
     'default': {
         'ENGINE': os.environ["DB_ENGINE"],
-        'NAME': os.environ["PGDATABASE"],
-        'USER': os.environ["PGUSER"],
-        'PASSWORD': os.environ["PGPASSWORD"],
-        'HOST': os.environ["PGHOST"],
-        'PORT': os.environ["PGPORT"],
+        'NAME': os.environ["POSTGRES_DB"],
+        'USER': os.environ["POSTGRES_USER"],
+        'PASSWORD': os.environ["POSTGRES_PASSWORD"],
+        'HOST': os.environ["POSTGRES_HOST"],
+        'PORT': os.environ["POSTGRES_PORT"],
     }
 }
 
