@@ -55,7 +55,7 @@ class Militar(models.Model):
     empenhos_minutos_atipica = models.IntegerField(blank=True, null=True)
     empenhos_minutos_tipica = models.IntegerField(blank=True, null=True)
     empenhos = models.ManyToManyField(
-        'Empenho', related_name='militares')
+        'Empenho', related_name='militares', blank=True, null=True)
 
     def __str__(self):
         return f"{self.postgrad} {self.nome}"

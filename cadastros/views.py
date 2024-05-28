@@ -204,8 +204,8 @@ def cadastrar_empenho(request):
 
         # Configuração de timezone
 
-        datahorainicial -= timedelta(hours=3)
-        datahorafinal -= timedelta(hours=3)
+        # datahorainicial -= timedelta(hours=3)
+        # datahorafinal -= timedelta(hours=3)
 
         # return HttpResponse(f"Recebido: \n namemp: {namemp} \n tipoemp: {tipoemp} \n datahorainicial: {datahorainicial} \n datahorafinal: {datahorafinal} \n hiddensei: {hiddensei} \n obsemp: {obsemp} \n hortip: {hortip} \n horatip: {horatip} \n all_militares_conv: {all_militares_conv}")
 

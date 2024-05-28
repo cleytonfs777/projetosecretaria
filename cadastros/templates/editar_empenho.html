@@ -310,6 +310,7 @@ overflow-x: auto;
                   </thead>
                   <tbody id="tbody-esp" class="table-body">
                     {% for militar in empenho.militares.all %}
+                    <tr>
                       <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-dobrada">{{militar.nome}}</td>
                       <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">{{militar.numero}}</td>
                       <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">{{militar.postgrad|formatpostgrad}}</td>
@@ -320,6 +321,7 @@ overflow-x: auto;
                       <td scope="col" class="rot-info rot-sm d-flex justify-content-center largura-normal">
                         <button class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button>
                       </td>
+                    </tr>
                       {% endfor %}
                     </tbody>
                 </table>
