@@ -1,6 +1,5 @@
 from django.db import models
 import random
-from faker import Faker
 # Substitua 'myapp' pelo nome do seu aplicativo
 
 postgrad_choices = (
