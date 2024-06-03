@@ -122,8 +122,7 @@ def registrar_indisp(request):
         # Verifica se o militar possui empenho no mesmo periodo
         empenho = verif_indisp(militar_id, datainit, datafinal)
         if empenho[0]:
-            messages.add_message(request, messages.ERROR, f'O militar possui o empenho de {empenho[1].nome} para o periodo de {
-                                 formatdatetime(empenho[1].datahorainicial)} até {formatdatetime(empenho[1].datahorafinal)}')
+            messages.add_message(request, messages.ERROR, f'O militar possui o empenho de {empenho[1].nome} para o periodo de {formatdatetime(empenho[1].datahorainicial)} até {formatdatetime(empenho[1].datahorafinal)}')
 
             return redirect(reverse('registrar_indisp'))
 
