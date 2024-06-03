@@ -367,8 +367,7 @@ def verificar_datas(request):
         except ValueError:
             return JsonResponse({'erro': 'f_dat_inv'}, status=400)
 
-        print(f"Data inicial maior que final?: {
-              datahora_fim <= datahora_inicio}")
+        print(f"Data inicial maior que final?: {datahora_fim <= datahora_inicio}")
 
         # Verificar se datahora_fim é maior que datahora_inicio
         if datahora_fim <= datahora_inicio:
