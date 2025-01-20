@@ -57,7 +57,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
-CSRF_TRUSTED_ORIGINS = ['https://django-server-production-53fa.up.railway.app',
+CSRF_TRUSTED_ORIGINS = ['https://projetosecretaria-production.up.railway.app/',
                         'https://gestaomilitar.site', 'https://www.gestaomilitar.site', 'http://localhost:8000']
 
 CSRF_COOKIE_SECURE = True
