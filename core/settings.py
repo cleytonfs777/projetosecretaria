@@ -91,7 +91,7 @@ AUTH_USER_MODEL = 'usuarios.Usuario'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ["DB_ENGINE"],
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ["PGDATABASE"],
         'USER': os.environ["PGUSER"],
         'PASSWORD': os.environ["PGPASSWORD"],
