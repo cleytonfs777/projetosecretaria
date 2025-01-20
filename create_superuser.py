@@ -7,6 +7,12 @@ django.setup()
 
 User = get_user_model()
 
-if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'adminserver@gmail.com', 'admin')
-    print("Superuser 'admin' created successfully.")
+username = "admin"
+password = "admin"
+email = "admin@example.com"
+
+if not User.objects.filter(username=username).exists():
+    User.objects.create_superuser(username, email, password)
+    print(f"✅ Superuser '{username}' created successfully.")
+else:
+    print(f"ℹ️ Superuser '{username}' already exists.")
