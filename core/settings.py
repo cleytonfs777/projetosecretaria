@@ -57,7 +57,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
-CSRF_TRUSTED_ORIGINS = ['https://django-server-production-53fa.up.railway.app', 'https://gestaomilitar.site', 'https://www.gestaomilitar.site', 'http://localhost:8000']
+CSRF_TRUSTED_ORIGINS = ['https://django-server-production-53fa.up.railway.app',
+                        'https://gestaomilitar.site', 'https://www.gestaomilitar.site', 'http://localhost:8000']
 
 CSRF_COOKIE_SECURE = True
 
@@ -73,7 +74,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'libraries':{
+            'libraries': {
                 'filters': 'cadastros.templatetags.filters'
             }
         },
@@ -98,7 +99,6 @@ DATABASES = {
         'PORT': os.environ["PGPORT"],
     }
 }
-
 
 
 # Password validation

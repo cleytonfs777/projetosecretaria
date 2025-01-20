@@ -1,9 +1,11 @@
 version: "3.1"
 services:
   postgresql:
-    image: postgres
+    image: postgres:latest
+    container_name: postgres_db
     restart: always
     environment:
+      POSTGRES_DB: projetosec
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 142924d0
     ports:

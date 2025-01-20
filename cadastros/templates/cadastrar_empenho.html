@@ -348,7 +348,7 @@
                     </div>
                     <div class="modal-body">
                       <div id="alert" class="row form-dep py-0"></div>
-                      <table class="table table-sm table-dot w-100 text-center table-striped h-100 datatable" id="table-equip">
+                      <table id="table-equip" class="table table-sm table-dot w-100 text-center table-striped h-100 datatable">
                         <thead class="table-primary table-header">
                           <tr>
                             <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Nome</th>
@@ -879,7 +879,7 @@
                         </button>
                       </div>
                       <hr>
-                      <table class="table table-sm table-dot w-100 text-center table-striped h-100 datatable" id="table-equip">
+                      <table class="table table-sm table-dot w-100 text-center table-striped h-100 datatable" id="table-automatic">
                         <thead class="table-primary table-header">
                           <tr>
                             <th scope="col" class="rot-info rot-sm d-flex justify-content-center">Nome</th>
@@ -892,7 +892,7 @@
                             <th scope="col" class="rot-info rot-sm d-flex justify-content-center"></th>
                           </tr>
                         </thead>
-                        <tbody id="tbody-automate" class="table-body">
+                        <tbody id="tbodyautomate" class="table-body">
 
                         </tbody>
                       </table>
@@ -1173,7 +1173,7 @@ function insereTableMil(miltarget){
           }
         }
       }
-      tabela.insertRow(-1).innerHTML = '<td class="text-center largura-dobrada"><input type="hidden" name="militar" value="' + militar_full.id + '">' + militar_full.nome + '</td><td class="text-center largura-normal">' + militar_full.numero + '</td><td class="text-center largura-normal">' + normalizepostgrad(militar_full.postgrad) + '</td><td class="text-center largura-normal">' + normalizeLocal(militar_full.local) + '</td><td class="text-center largura-normal">' + militar_full.qtd_empenhos + '</td><td class="text-center largura-normal">' + minutosParaHoras(militar_full.empenhos_minutos_tipica) + '</td><td class="text-center largura-normal">' + minutosParaHoras(militar_full.empenhos_minutos_atipica) + '</td><td class="text-center largura-normal"><button class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button></td>';
+      tabela.insertRow(-1).innerHTML = '<td class="rot-info rot-sm d-flex justify-content-center largura-dobrada"><input type="hidden" name="militar" value="' + militar_full.id + '">' + militar_full.nome + '</td><td class="rot-info rot-sm d-flex justify-content-center largura-normal">' + militar_full.numero + '</td><td class="rot-info rot-sm d-flex justify-content-center largura-normal">' + normalizepostgrad(militar_full.postgrad) + '</td><td class="rot-info rot-sm d-flex justify-content-center largura-normal">' + normalizeLocal(militar_full.local) + '</td><td class="rot-info rot-sm d-flex justify-content-center largura-normal">' + militar_full.qtd_empenhos + '</td><td class="rot-info rot-sm d-flex justify-content-center largura-normal">' + minutosParaHoras(militar_full.empenhos_minutos_tipica) + '</td><td class="rot-info rot-sm d-flex justify-content-center largura-normal">' + minutosParaHoras(militar_full.empenhos_minutos_atipica) + '</td><td class="rot-info rot-sm d-flex justify-content-center largura-normal"><button class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button></td>';
     }
   })
   .catch(error => {
@@ -1466,26 +1466,26 @@ function deleteRow(index) {
 }
 
 function renderTable() {
-    const tbodyautomate = document.querySelector("#modalAutoGenerate > div > div > div.modal-body > div.datatable-wrapper.datatable-loading.no-footer.sortable.searchable.fixed-columns.datatable-empty > div.datatable-container > table > tbody");
-    tbodyautomate.innerHTML = "";
-    displayedData.forEach((data, index) => addRow(data, index));
+  const tbodyautomate = document.querySelector("#modalAutoGenerate > div > div > div.modal-body > div.datatable-wrapper.datatable-loading.no-footer.sortable.searchable.fixed-columns.datatable-empty > div.datatable-container > table > tbody");
+  tbodyautomate.innerHTML = "";
+  displayedData.forEach((data, index) => addRow(data, index));
 }
 
 function addRow(data, index) {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td class="rot-info rot-sm d-flex justify-content-center ">${data.nome}</td>
-        <td class="rot-info rot-sm d-flex justify-content-center ">${data.numero}</td>
-        <td class="rot-info rot-sm d-flex justify-content-center ">${data.postgrad}</td>
-        <td class="rot-info rot-sm d-flex justify-content-center ">${data.local}</td>
-        <td class="rot-info rot-sm d-flex justify-content-center ">${data.qtd_empenhos}</td>
-        <td class="rot-info rot-sm d-flex justify-content-center ">${data.empenhos_minutos_tipica}</td>
-        <td class="rot-info rot-sm d-flex justify-content-center ">${data.empenhos_minutos_atipica}</td>
-        <td class="rot-info rot-sm d-flex justify-content-center ">
-            <button class="btn btn-danger btn-sm" onclick="deleteRow(${index})">X</button>
-        </td>
-    `;
-    document.querySelector("#modalAutoGenerate > div > div > div.modal-body > div.datatable-wrapper.datatable-loading.no-footer.sortable.searchable.fixed-columns.datatable-empty > div.datatable-container > table > tbody").appendChild(row);
+  const row = document.createElement("tr");
+  row.innerHTML = `
+      <td class="rot-info rot-sm d-flex justify-content-center ">${data.nome}</td>
+      <td class="rot-info rot-sm d-flex justify-content-center ">${data.numero}</td>
+      <td class="rot-info rot-sm d-flex justify-content-center ">${data.postgrad}</td>
+      <td class="rot-info rot-sm d-flex justify-content-center ">${data.local}</td>
+      <td class="rot-info rot-sm d-flex justify-content-center ">${data.qtd_empenhos}</td>
+      <td class="rot-info rot-sm d-flex justify-content-center ">${data.empenhos_minutos_tipica}</td>
+      <td class="rot-info rot-sm d-flex justify-content-center ">${data.empenhos_minutos_atipica}</td>
+      <td class="rot-info rot-sm d-flex justify-content-center ">
+          <button class="btn btn-danger btn-sm" onclick="deleteRow(${index})">X</button>
+      </td>
+  `;
+  document.querySelector("#modalAutoGenerate > div > div > div.modal-body > div.datatable-wrapper.datatable-loading.no-footer.sortable.searchable.fixed-columns.datatable-empty > div.datatable-container > table > tbody").appendChild(row);
 }
 
 function generateAutomaticScale() {
@@ -1566,16 +1566,28 @@ function generateAutomaticScale() {
     });
 }
 
-$(document).ready(function() {
+{% comment %} $(document).ready(function() {
   $('#table-equip').DataTable();
 
   
-});
+}); {% endcomment %}
 
 function addToMainTable() {
   const milTableBody = document.getElementById('milTableBody');
-  milTableBody.innerHTML = ''; // Limpar o corpo da tabela antes de adicionar novos dados
+  
   displayedData.forEach((data) => {
+      // Verificar se a linha já existe na tabela
+      const existingRow = Array.from(milTableBody.getElementsByTagName('tr')).find(row => {
+          const cells = row.getElementsByTagName('td');
+          return cells.length > 1 && cells[1].textContent.trim() === data.numero.trim();
+      });
+
+      // Se a linha já existir, não adicionar novamente
+      if (existingRow) {
+          return;
+      }
+
+      // Criar nova linha e adicionar à tabela
       const row = document.createElement('tr');
       console.log("Essa é o DATA:")
       console.log(data)
@@ -1593,6 +1605,7 @@ function addToMainTable() {
       milTableBody.appendChild(row);
   });
 }
+
 </script>
 {% endblock %}
 
